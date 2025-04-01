@@ -1,4 +1,13 @@
+'use client'
+
+import Header from "@/components/common/header/Header";
+import { SignUp } from "@/components/common/singup/Signup";
+
 export default function page() {
-  return <div className="bg-[#292929] w-screen h-screen">
-  </div>;
+  return (
+    <div>
+      <SignUp />
+    </div>
+  );
+
 }

@@ -28,14 +28,14 @@
 }
 
 :root{
-  --main-color : #CDCDCD;
+  --main-color : #dcdcdc;
   --secondary-color: #DDDDDD;
   --w-color: #fff;
   --o-color: #DC9908;
   --r-color: red;
   --b-color: #2563eb;
   --b-color-hover: #1d4ed8;
-  --g-color: #585858;  
+  --g-color: #6C6C6C;  
   --green-color: #54A131;
   --text-menu-color: #1D1B20;
   --menu-hover: #A9D196;
