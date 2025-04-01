@@ -28,77 +28,21 @@
 }
 
 :root{
-  --main-color : #212121;
-  --main-color-hover: #323232;
-  --main-color-hover-darker: #262626;
-  --secondary-color: #262626;
-  --tertiary-color: #232323;
-  --darker-color: #131313;
-  --dark-color: #1d1d1d;
-  --light-color: #444444;
-  --circle-color: #1b1b1f;
+  --main-color : #CDCDCD;
+  --secondary-color: #DDDDDD;
   --w-color: #fff;
   --o-color: #DC9908;
   --r-color: red;
   --b-color: #2563eb;
   --b-color-hover: #1d4ed8;
-  --g-color: #585858;
-  --bright-r-color: #FF4C4C;
-  --g-color-ver-02: #575757;
-  --g-color-hover: #;
-  --lighter-color: #9A9996;
-  --input-color: #414141;
-  --fade-timing: 300ms ease-out 20ms;
-  --radius: 16px;
-  --height: calc(100vh - 57px);
-  --max-height-quran: calc(100vh - 160px);
-  --width: calc(100vh - 360px);
-  --header-width: calc(100% - 60px);
-  --sidebar-width: 290px;
-  --font-cairo: "Cairo", sans-serif;
+  --g-color: #585858;  
+  --green-color: #54A131;
+  --text-menu-color: #1D1B20;
+  --menu-hover: #A9D196;
 }
 
 body{
   margin: 0;
   padding: 0;
-  background-color: var(--secondary-color);
+  background-color: var(--main-color);
 }
-
-.react-datepicker {
-  background-color: #1f1f1f; /* Dark background */
-  border: 1px solid #333;
-  border-radius: 8px;
-  font-family: inherit;
-  color: white;
-}
-
-.react-datepicker__header {
-  background-color: #333; /* Header background */
-  border-bottom: 1px solid #444;
-}
-
-.react-datepicker__day {
-  color: white;
-}
-
-.react-datepicker__day--selected {
-  background-color: #4CAF50 !important; /* Green selected */
-  color: white !important;
-  border-radius: 6px;
-}
-
-.react-datepicker__time-list {
-  background-color: #1f1f1f !important;
-  border-radius: 6px;
-  color: white !important;
-}
-
-.react-datepicker__time-list-item {
-  color: white !important;
-}
-
-.react-datepicker__time-list-item--selected {
-  background-color: #4CAF50 !important;
-  color: white !important;
-}
-
