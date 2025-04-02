@@ -24,7 +24,8 @@
 
 :root{
   --main-color : #dcdcdc;
-  --secondary-color: #DDDDDD;
+  --secondary-color: #f5ebe2;
+  --black-color: black;
   --w-color: #fff;
   --o-color: #DC9908;
   --r-color: red;
@@ -32,6 +33,7 @@
   --b-color-hover: #1d4ed8;
   --g-color: #6C6C6C;  
   --green-color: #54A131;
+  --green-color-hover: #58cb22;
   --text-menu-color: #1D1B20;
   --menu-hover: #A9D196;
 }
@@ -42,5 +44,5 @@ body{
   background-color: var(--main-color);
 }
 @theme{
-  --spacing: 1px;
+  --spacing: 4px;
 }
