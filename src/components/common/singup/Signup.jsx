@@ -4,7 +4,8 @@ export function SignUp() {
     const [agreed, setAgreed] = useState(false);
 
     return (
-        <div className="flex flex-col gap-4 shadow-xl p-4 rounded-xl">
+        <div className="flex flex-col gap-4 shadow-xl p-4 rounded-xl z-20 pl-10 bg-[var(--w-color)]">
+            <h1 className="font-bold text-3xl pb-2.5">Sign Up</h1>
             <div className="flex gap-4">
                 <label className="flex flex-col gap-2">
                     <p className="text-[10px]">Name</p>
@@ -25,8 +26,8 @@ export function SignUp() {
                 <input className="bg-[var(--g-color-opacity)] rounded-md py-1" type="text" />
             </label>
 
-            <div className="flex items-center justify-center gap-4 text-sm">
-                <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-xs ${agreed ? 'bg-[var(--b-color)]' : 'bg-[var(--g-color-opacity)]'}`}
+            <div className="flex items-center justify-center gap-4 text-[12px]">
+                <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-[12px] ${agreed ? 'bg-[var(--b-color)]' : 'bg-[var(--g-color-opacity)]'}`}
                     onClick={() => setAgreed(!agreed)}
                     >
                     {agreed && (
@@ -54,7 +55,7 @@ export function SignUp() {
             </div>
 
             <button className="bg-[var(--green-color)] rounded-md py-2 text-[var(--w-color)] w-min px-16 text-nowrap mt-2 cursor-pointer">Sign Up</button>
-            <p className="text-sm">Already have an account? <a className="text-[var(--b-color)] underline text-sm" href="#">Sign In</a></p>
+            <p className="text-[12px] mt-2">Already have an account? <a className="text-[var(--b-color)] underline text-[12px]" href="#">Sign In</a></p>
         </div>
     );
 }
