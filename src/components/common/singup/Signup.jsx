@@ -9,25 +9,25 @@ export function SignUp() {
             <div className="flex gap-4">
                 <label className="flex flex-col gap-2">
                     <p className="text-[10px]">Name</p>
-                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1 w-42" type="text" />
+                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1.5 w-42 px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)]" type="text" />
                 </label>
                 <label className="flex flex-col gap-2">
                     <p className="text-[10px]">Email</p>
-                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1 w-42" type="text" />
+                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1.5 w-42 px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)]" type="email" />
                 </label>
             </div>
 
             <label className="flex flex-col gap-2">
-                <p className="text-[10px]">Password</p>
-                <input className="bg-[var(--g-color-opacity)] rounded-md py-1" type="text" />
+                    <p className="text-[10px]">Password</p>
+                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)]" type="password" />
             </label>
             <label className="flex flex-col gap-2">
                 <p className="text-[10px]">Confirm Password</p>
-                <input className="bg-[var(--g-color-opacity)] rounded-md py-1" type="text" />
+                <input className="bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)]" type="password" />
             </label>
 
             <div className="flex items-center justify-center gap-4 text-[12px]">
-                <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-[12px] ${agreed ? 'bg-[var(--b-color)]' : 'bg-[var(--g-color-opacity)]'}`}
+                <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-[12px] ${agreed ? 'bg-[var(--green-color)]' : 'bg-[var(--g-color-opacity)]'}`}
                     onClick={() => setAgreed(!agreed)}
                     >
                     {agreed && (
