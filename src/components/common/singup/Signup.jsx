@@ -1,36 +1,60 @@
+import { useState } from "react";
+
 export function SignUp() {
-    const inputStyle = "w-[280px] px-2 py-1 text-sm text-[var(--black-color)] placeholder-[var(--g-color)] rounded-md border border-[var(--main-color-hover)]";
+    const [agreed, setAgreed] = useState(false);
 
     return (
-        <div className="bg-[var(--w-color)] w-min flex flex-col items-center justify-center p-2 rounded-md border border-[var(--g-color)] shadow-2xl">
-            <h2 className="text-xl font-semibold py-1">Sign Up</h2>
-            <form className="p-4 flex flex-col gap-3">
-                <input className={inputStyle} type="text" placeholder="First Name" required />
-                <input className={inputStyle} type="text" placeholder="Last Name" required />
-                <input className={inputStyle} type="email" placeholder="Email" required />
-                <input className={inputStyle} type="password" placeholder="Password" required />
-                <input className={inputStyle} type="password" placeholder="Confirm Password" required />
+        <div className="flex flex-col gap-4 shadow-xl p-4 rounded-xl">
+            <div className="flex gap-4">
+                <label className="flex flex-col gap-2">
+                    <p className="text-[10px]">Name</p>
+                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1 w-42" type="text" />
+                </label>
+                <label className="flex flex-col gap-2">
+                    <p className="text-[10px]">Email</p>
+                    <input className="bg-[var(--g-color-opacity)] rounded-md py-1 w-42" type="text" />
+                </label>
+            </div>
 
-                <div className="flex items-center gap-2 w-full pt-2">
-                    <div className="h-px w-1/2 bg-[var(--g-color)]"></div>
-                    <p className="text-[var(--g-color)] text-xs">Or</p>
-                    <div className="h-px w-1/2 bg-[var(--g-color)]"></div>
+            <label className="flex flex-col gap-2">
+                <p className="text-[10px]">Password</p>
+                <input className="bg-[var(--g-color-opacity)] rounded-md py-1" type="text" />
+            </label>
+            <label className="flex flex-col gap-2">
+                <p className="text-[10px]">Confirm Password</p>
+                <input className="bg-[var(--g-color-opacity)] rounded-md py-1" type="text" />
+            </label>
+
+            <div className="flex items-center justify-center gap-4 text-sm">
+                <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-xs ${agreed ? 'bg-[var(--b-color)]' : 'bg-[var(--g-color-opacity)]'}`}
+                    onClick={() => setAgreed(!agreed)}
+                    >
+                    {agreed && (
+                        <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-3 h-3"
+                        >
+                        <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M21.2287 6.60355C21.6193 6.99407 21.6193 7.62723 21.2287 8.01776L10.2559 18.9906C9.86788 19.3786 9.23962 19.3814 8.84811 18.9969L2.66257 12.9218C2.26855 12.5349 2.26284 11.9017 2.64983 11.5077L3.35054 10.7942C3.73753 10.4002 4.37067 10.3945 4.7647 10.7815L9.53613 15.4677L19.1074 5.89644C19.4979 5.50592 20.1311 5.50591 20.5216 5.89644L21.2287 6.60355Z"
+                            fill="white"
+                        />
+                        </svg>
+                    )}
                 </div>
 
-                <div className={`${inputStyle} flex items-center bg-[var(--secondary-color)] cursor-pointer -mt-1 mb-2`}>
-                    <svg className="w-4 h-4" viewBox="-3 0 262 262" xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                        <g><path d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" fill="#4285F4" />
-                        <path d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" fill="#34A853" />
-                        <path d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" fill="#FBBC05" />
-                        <path d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" fill="#EB4335" /></g>
-                    </svg>
-                    <p className="ml-auto mr-auto text-[var(--g-color)] text-sm">Login with Google</p>
-                </div>
+                <p>
+                    By continuing, you agree to Roomet's{" "}
+                    <a className="text-[var(--b-color)] underline" href="#">Terms of Use</a> and{" "}
+                    <a className="text-[var(--b-color)] underline" href="#">Privacy Policy</a>
+                </p>
+            </div>
 
-                <button className="py-1.5 px-3 bg-[var(--green-color)] text-[var(--w-color)] text-sm border border-[var(--g-color)] cursor-pointer hover:bg-[var(--green-color-hover)] rounded-sm">
-                    Sign Up
-                </button>
-            </form>
+            <button className="bg-[var(--green-color)] rounded-md py-2 text-[var(--w-color)] w-min px-16 text-nowrap mt-2 cursor-pointer">Sign Up</button>
+            <p className="text-sm">Already have an account? <a className="text-[var(--b-color)] underline text-sm" href="#">Sign In</a></p>
         </div>
     );
 }
