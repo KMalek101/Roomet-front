@@ -49,13 +49,13 @@ export function SignUp() {
 
                 <p>
                     By continuing, you agree to Roomet's{" "}
-                    <a className="text-[var(--b-color)] underline" href="#">Terms of Use</a> and{" "}
-                    <a className="text-[var(--b-color)] underline" href="#">Privacy Policy</a>
+                    <a className="text-[var(--green-color))] underline" href="#">Terms of Use</a> and{" "}
+                    <a className="text-[var(--green-color))] underline" href="#">Privacy Policy</a>
                 </p>
             </div>
 
             <button className="bg-[var(--green-color)] rounded-md py-2 text-[var(--w-color)] w-min px-16 text-nowrap mt-2 cursor-pointer">Sign Up</button>
-            <p className="text-[12px] mt-2">Already have an account? <a className="text-[var(--b-color)] underline text-[12px]" href="#">Sign In</a></p>
+            <p className="text-[12px] mt-2">Already have an account? <a className="text-[var(--green-color))] underline text-[12px]" href="#">Sign In</a></p>
         </div>
     );
 }
