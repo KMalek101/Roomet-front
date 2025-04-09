@@ -15,12 +15,12 @@ export default function Sidebar() {
     ];
     
     return (
-      <div className="sidebar bg-gray-200 p-2 w-60 flex-1">
+      <div className="sidebar bg-[var(--secondary-color)] w-60 flex-1 h-[var(--sidebar-height)]">
         {menuItems.map((item, index) => (
           <div
             key={index}
-            className={`flex items-center justify-between p-2 hover:bg-green-300 cursor-pointer ${
-              item.label === "Room" ? "bg-green-300" : ""
+            className={`flex items-center justify-between p-2 py-2.5 hover:bg-[var(--menu-hover)] cursor-pointer ${
+              item.label === "Room" ? "bg-[var(--menu-hover)]" : ""
             }`}
           >
             <span>{item.label}</span>

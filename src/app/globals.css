@@ -37,6 +37,7 @@
   --green-color-hover: #58cb22;
   --text-menu-color: #1D1B20;
   --menu-hover: #A9D196;
+  --sidebar-height: calc(100vh - 72px);
 }
 
 body{
