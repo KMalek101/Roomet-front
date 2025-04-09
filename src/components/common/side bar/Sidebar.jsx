@@ -30,7 +30,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="sidebar bg-[var(--secondary-color)] w-60 h-[var(--sidebar-height)] border-r border-[var(--g-color)]">
+    <div className="sidebar bg-[var(--secondary-color)] text-sm w-60 h-[var(--sidebar-height)] border-r border-[var(--g-color)]">
       {menuItems.map((item, index) => {
         const itemRoute = getRouteFromLabel(item.label);
         const isActive = pathname === itemRoute;
