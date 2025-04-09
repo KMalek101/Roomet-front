@@ -95,7 +95,25 @@ export default function CreateBlocks() {
                     )}
                 </div>
             </label>
+
+            <div className="h-[1px] w-full px-2 py-7">
+                <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
+            </div>
             
+            <label className="flex " >
+                <div className="w-86">
+                    <p className="text-xl font-bold cursor-text">Max students per room</p>
+                    <p className="text-xs text-[var(--g-color)] cursor-text">Please choose what's the max number of students in one room.</p>
+                </div>
+                <input 
+                 type="number" 
+                 placeholder="ex : 4" 
+                 className="bg-[var(--g-color-opacity)] rounded-md py-1.5 w-24 h-[44px] px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)] ml-56"
+                />
+
+            </label>
+
+
         </div>
     )
 }
