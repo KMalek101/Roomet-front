@@ -1,6 +1,6 @@
 'use client'
 
-import CreateBlocks from "@/components/common/create blocks/CreateBlocks";
+import CreateBlocks from "@/components/common/blocks/CreateBlocks";
 import Header from "@/components/common/header/Header";
 import Sidebar from "@/components/common/side bar/Sidebar";
 
