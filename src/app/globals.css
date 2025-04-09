@@ -47,3 +47,11 @@ body{
 @theme{
   --spacing: 4px;
 }
+
+@font-face {
+  font-family: 'cherrybomb';
+  src: url('/fonts/CherryBombOne.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
