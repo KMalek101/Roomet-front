@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+"use client";
+
+import React from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Sidebar() {
-  const [activeItem, setActiveItem] = useState("Room");
   const router = useRouter();
+  const pathname = usePathname();
 
   const menuItems = [
     { label: "Profile" },
@@ -16,29 +18,38 @@ export default function Sidebar() {
     { label: "Settings" },
     { label: "Log out" },
     { label: "Dashboard" },
-    { label: "Support" }
+    { label: "Support" },
   ];
 
+  const getRouteFromLabel = (label) =>
+    "/" + label.toLowerCase().replace(/\s+/g, "-");
+
   const handleClick = (label) => {
-    setActiveItem(label);
-    const route = "/" + label.toLowerCase().replace(/\s+/g, "-");
+    const route = getRouteFromLabel(label);
     router.push(route);
   };
 
   return (
     <div className="sidebar bg-[var(--secondary-color)] w-60 flex-1 h-[var(--sidebar-height)] border-r border-[var(--g-color)]">
-      {menuItems.map((item, index) => (
-        <div
-          key={index}
-          onClick={() => handleClick(item.label)}
-          className={`flex items-center justify-between p-2 py-2.5 cursor-pointer transition-all duration-50 ease-in-out ${
-            activeItem === item.label ? "bg-[var(--menu-hover)]" : "hover:bg-[var(--menu-hover)]"
-          }`}
-        >
-          <span>{item.label}</span>
-          <span>▸</span>
-        </div>
-      ))}
+      {menuItems.map((item, index) => {
+        const itemRoute = getRouteFromLabel(item.label);
+        const isActive = pathname === itemRoute;
+
+        return (
+          <div
+            key={index}
+            onClick={() => handleClick(item.label)}
+            className={`flex items-center justify-between p-2 py-2.5 cursor-pointer transition-all duration-200 ${
+              isActive
+                ? "bg-[var(--menu-hover)]"
+                : "hover:bg-[var(--menu-hover)]"
+            }`}
+          >
+            <span>{item.label}</span>
+            <span>▸</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
