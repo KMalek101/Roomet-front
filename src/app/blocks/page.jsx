@@ -7,7 +7,11 @@ export default function page() {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Header />
-      <Sidebar />
+      <div className="flex">
+        <Sidebar />
+        <p className="font-semibold text-2xl">Create your blocks</p>
+        
+      </div>
     </div>
   );
 }
