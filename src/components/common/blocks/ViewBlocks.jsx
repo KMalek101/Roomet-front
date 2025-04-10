@@ -26,14 +26,9 @@ export default function ViewBlocks() {
     setIsOpen(false);
   };
 
-  return (
-    <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 rounded-md flex-1">
-      <label htmlFor="viewMode" className="font-medium">
-        View blocks as
-      </label>
-
-      {/* Custom dropdown */}
-      <div className="relative w-72 text-sm">
+  const CustomDropdown = () => {
+    return(
+        <div className="relative w-72 text-sm">
         <button
           id="viewMode"
           onClick={() => setIsOpen(!isOpen)}
@@ -63,10 +58,86 @@ export default function ViewBlocks() {
           </div>
         )}
       </div>
+    );
+  }
 
-      <div className="h-[1px] w-full px-2 py-7">
-        <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
-      </div>
+const Header = () => {
+	const [sortDirection, setSortDirection] = useState({
+		name: null,
+		students: null,
+		availability: null,
+		reports: null,
+	});
+
+	const handleSort = (column) => {
+		setSortDirection((prev) => {
+			const newDirection = prev[column] === "asc" ? "desc" : "asc";
+
+            return {
+				name: column === "name" ? newDirection : null,
+				students: column === "students" ? newDirection : null,
+				availability: column === "availability" ? newDirection : null,
+				reports: column === "reports" ? newDirection : null,
+			};
+		});
+	};
+
+	const renderArrow = (direction) => {
+		if (direction === null) return null; 
+		return direction === "asc" ? (
+			<span className="ml-2">▲</span> // Ascending arrow
+		) : (
+			<span className="ml-2">▼</span> // Descending arrow
+		);
+	};
+
+	return (
+		<div className="flex justify-between items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md">
+			<p
+				className="flex items-center cursor-pointer"
+				onClick={() => handleSort("name")}
+			>
+				Name
+				{renderArrow(sortDirection.name)}
+			</p>
+			<p
+				className="flex items-center cursor-pointer"
+				onClick={() => handleSort("students")}
+			>
+				Students
+				{renderArrow(sortDirection.students)}
+			</p>
+			<p
+				className="flex items-center cursor-pointer"
+				onClick={() => handleSort("availability")}
+			>
+				Availability
+				{renderArrow(sortDirection.availability)}
+			</p>
+			<p
+				className="flex items-center cursor-pointer"
+				onClick={() => handleSort("reports")}
+			>
+				Reports
+				{renderArrow(sortDirection.reports)}
+			</p>
+		</div>
+	);
+};
+
+  return (
+    <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
+        <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md ">
+            <label htmlFor="viewMode" className="font-medium">
+                View blocks as
+            </label>
+            <CustomDropdown />
+        </div>
+
+        <Header />
+        <div className="h-[1px] w-full px-2 py-7">
+            <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
+        </div>
     </div>
   );
 }
