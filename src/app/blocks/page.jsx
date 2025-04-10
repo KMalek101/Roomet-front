@@ -14,8 +14,6 @@ export default function page() {
         <div className="flex flex-col py-6 px-12 flex-1 overflow-y-auto h-screen no-scrollbar pb-24">
           <p className="font-semibold text-2xl pb-4">Create your blocks</p>
           <CreateBlocks />
-          <p className="font-semibold text-2xl pb-4 pt-12">View your blocks</p>
-          <ViewBlocks />
         </div>
       </div>
     </div>
