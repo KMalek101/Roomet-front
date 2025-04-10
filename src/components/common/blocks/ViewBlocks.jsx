@@ -1,101 +1,72 @@
 import { useState } from "react";
 
 export default function ViewBlocks() {
-    const [selection, setSelection] = useState("");
+  const [selection, setSelection] = useState("grid");
+  const [isOpen, setIsOpen] = useState(false);
 
-    return(
-        <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 rounded-md flex-1 ">
-            
-            <label className="flex" >
-                <div className="w-86">
-                    <p className="text-xl font-bold">Blocks number</p>
-                    <p className="text-xs text-[var(--g-color)]">Please specify the number of blocks you have in your drum.</p>
-                </div>
-                <input 
-                 type="number" 
-                 placeholder="ex : 12" 
-                 className="bg-[var(--g-color-opacity)] rounded-md py-1.5 w-24 h-[44px] px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)] ml-56"
-                />
-            </label>
+  const options = [
+    {
+      value: "grid",
+      label: "Grid",
+      icon: <span className="mr-2">
+        <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 1H1V5H7V1Z" fill="#000000"></path> <path d="M7 7H1V15H7V7Z" fill="#000000"></path> <path d="M9 1H15V9H9V1Z" fill="#000000"></path> <path d="M15 11H9V15H15V11Z" fill="#000000"></path> </g></svg>
+      </span>,
+    },
+    {
+      value: "list",
+      label: "List",
+      icon: <span className="mr-2">
+        <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 1H1V3H3V1Z" fill="#000000"></path> <path d="M3 5H1V7H3V5Z" fill="#000000"></path> <path d="M1 9H3V11H1V9Z" fill="#000000"></path> <path d="M3 13H1V15H3V13Z" fill="#000000"></path> <path d="M15 1H5V3H15V1Z" fill="#000000"></path> <path d="M15 5H5V7H15V5Z" fill="#000000"></path> <path d="M5 9H15V11H5V9Z" fill="#000000"></path> <path d="M15 13H5V15H15V13Z" fill="#000000"></path> </g></svg>
+      </span>,
+    },
+  ];
 
-            <div className="h-[1px] w-full px-2 py-7">
-                <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
-            </div>
+  const handleSelect = (value) => {
+    setSelection(value);
+    setIsOpen(false);
+  };
 
-            <label className="flex " >
-                <div className="w-86">
-                    <p className="text-xl font-bold cursor-text">Blocks names</p>
-                    <p className="text-xs text-[var(--g-color)] cursor-text">Please choose wether you want to name your blocks yourself or auto name them.</p>
-                </div>
-                <select
-                className="bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)] h-[44px] w-52 ml-56"
-                >
-                    <option value="alphabetical">Name (A-Z)</option>
-                    <option value="numerical">Name (Indexed Order)</option>
-                    <option value="custom">Custom Order</option>
-                </select>
+  return (
+    <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 rounded-md flex-1">
+      <label htmlFor="viewMode" className="font-medium">
+        View blocks as
+      </label>
 
-            </label>
+      {/* Custom dropdown */}
+      <div className="relative w-72 text-sm">
+        <button
+          id="viewMode"
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-[var(--g-color-opacity)] h-[44px] w-full flex items-center justify-between rounded-md px-3 py-2 focus:outline-1 focus:outline-[var(--green-color)]"
+        >
+          <div className="flex items-center">
+            {options.find((o) => o.value === selection)?.icon}
+            {options.find((o) => o.value === selection)?.label}
+          </div>
+          <span className="ml-2">▼</span>
+        </button>
 
-            <div className="h-[1px] w-full px-2 py-7">
-                <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
-            </div>
+        {isOpen && (
+          <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-md">
+            {options.map((option) => (
+              <div
+                key={option.value}
+                onClick={() => handleSelect(option.value)}
+                className={`flex items-center px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
+                  selection === option.value ? "bg-[var(--g-color-opacity)]" : ""
+                }`}
+              >
+                {option.icon}
+                {option.label}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-            <label className="flex " >
-                <div className="w-86">
-                    <p className="text-xl font-bold cursor-text">Floors per block</p>
-                    <p className="text-xs text-[var(--g-color)] cursor-text">Please choose how many floors are in each block of your blocks.</p>
-                </div>
-                <input 
-                 type="number" 
-                 placeholder="ex : 5" 
-                 className="bg-[var(--g-color-opacity)] rounded-md py-1.5 w-24 h-[44px] px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)] ml-56"
-                />
-
-            </label>
-
-            <div className="h-[1px] w-full px-2 py-7">
-                <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
-            </div>
-
-            <label className="flex " >
-                <div className="w-86">
-                    <p className="text-xl font-bold cursor-text">Rooms per Floor</p>
-                    <p className="text-xs text-[var(--g-color)] cursor-text">Please choose how many rooms are in each floor of your floors.</p>
-                </div>
-                <input 
-                 type="number" 
-                 placeholder="ex : 14" 
-                 className="bg-[var(--g-color-opacity)] rounded-md py-1.5 w-24 h-[44px] px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)] ml-56"
-                />
-
-            </label>
-
-            <div className="h-[1px] w-full px-2 py-7">
-                <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
-            </div>
-
-            <label className="flex" >
-                <div className="w-86">
-                    <p className="text-xl font-bold cursor-text">Rooms names</p>
-                    <p className="text-xs text-[var(--g-color)] cursor-text">Please choose wether you want to name your rooms yourself or auto name them.</p>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                    <select
-                     value={selection}
-                     onChange={(e) => setSelection(e.target.value)}
-                     className="bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm focus:outline-1 focus:outline-[var(--green-color)] h-[44px] w-72 ml-56"
-                    >
-                        <option value="alphabetical">Name by block and floor</option>
-                        <option value="numerical">Name (Indexed Order)</option>
-                        <option value="custom">Custom Order</option>
-                    </select>
-                    {selection === "alphabetical" && (
-                        <p className="text-sm text-gray-500">ex : H309</p>
-                    )}
-                </div>
-            </label>
-            
-        </div>
-    )
+      <div className="h-[1px] w-full px-2 py-7">
+        <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
+      </div>
+    </div>
+  );
 }
