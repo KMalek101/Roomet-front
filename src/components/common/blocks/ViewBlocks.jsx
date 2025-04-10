@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BlockListCard from "./BlockListCard";
 
 export default function ViewBlocks() {
   const [selection, setSelection] = useState("grid");
@@ -135,9 +136,10 @@ const Header = () => {
         </div>
 
         <Header />
-        <div className="h-[1px] w-full px-2 py-7">
+        <div className="h-[1px] w-full p-2">
             <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
         </div>
+        <BlockListCard name={"J"} students={1} availability={1} reports={1} />
     </div>
   );
 }
