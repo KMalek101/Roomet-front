@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import BlockGridCard from "./BlockGridCard";
 import BlockListCard from "./BlockListCard";
 
 export default function ViewBlocks() {
@@ -256,13 +257,31 @@ export default function ViewBlocks() {
       <div className="h-[1px] w-full p-2">
         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
       </div>
-      <BlockListCard name={"J"} students={1} availability={1} reports={1} />
-      <BlockListCard name={"A"} students={5} availability={3} reports={2} />
-        <BlockListCard name={"B"} students={12} availability={0} reports={5} />
-        <BlockListCard name={"C"} students={0} availability={10} reports={0} />
-        <BlockListCard name={"D"} students={8} availability={2} reports={7} />
-        <BlockListCard name={"E"} students={3} availability={4} reports={1} />
-
+      {selection === "list" ? (
+        <div className="flex flex-col gap-4">
+          <BlockListCard name={"J"} students={1} availability={1} reports={1} />
+          <BlockListCard name={"A"} students={5} availability={3} reports={2} />
+          <BlockListCard name={"B"} students={12} availability={0} reports={5} />
+          <BlockListCard name={"C"} students={0} availability={10} reports={0} />
+          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
+          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
+          <BlockListCard name={"C"} students={0} availability={10} reports={0} />
+          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
+          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
+        </div>
+      ) : (
+      <div className="flex gap-6.5 flex-wrap">
+        <BlockGridCard name={"J"} students={1} availability={1} reports={1} />
+        <BlockGridCard name={"A"} students={5} availability={3} reports={2} />
+        <BlockGridCard name={"B"} students={12} availability={0} reports={5} />
+        <BlockGridCard name={"C"} students={0} availability={10} reports={0} />
+        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
+        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
+        <BlockGridCard name={"C"} students={0} availability={10} reports={0} />
+        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
+        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
+      </div>
+      )}
     </div>
   );
 }
