@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import RoomListCard from "./RoomListCard";
+import RoomGridCard from "./RoomGridCard";
 
 export default function ViewRooms() {
   const [selection, setSelection] = useState("grid");
@@ -267,19 +268,27 @@ export default function ViewRooms() {
       </div>
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
-<RoomListCard name={"H309"} students={["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"]} maxStudents={4} reports={14} block={"H"} />
-<RoomListCard name={"H310"} students={["A_Bouzar", "N_Zitouni"]} maxStudents={4} reports={7} block={"H"} />
-<RoomListCard name={"H311"} students={["Y_Belhadj", "F_Tebib", "D_Lounis"]} maxStudents={4} reports={3} block={"H"} />
-<RoomListCard name={"H312"} students={["S_Mebarki", "R_Benhammou", "L_Khider"]} maxStudents={4} reports={5} block={"H"} />
-<RoomListCard name={"H313"} students={["I_Hadjar", "T_Benali"]} maxStudents={4} reports={8} block={"H"} />
-<RoomListCard name={"H314"} students={["C_Bourahla", "K_Zouaoui"]} maxStudents={4} reports={2} block={"H"} />
-<RoomListCard name={"H315"} students={["A_Toumi", "E_Benmeriem", "M_Hassani"]} maxStudents={4} reports={9} block={"H"} />
-<RoomListCard name={"H316"} students={["B_Daraji", "S_Nekkache"]} maxStudents={4} reports={1} block={"H"} />
-<RoomListCard name={"H317"} students={["Z_Mansouri", "N_Benameur", "O_Bekkouche"]} maxStudents={4} reports={6} block={"H"} />
+            <RoomListCard name={"H309"} students={["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"]} maxStudents={4} reports={14} block={"H"} />
+            <RoomListCard name={"H310"} students={["A_Bouzar", "N_Zitouni"]} maxStudents={4} reports={7} block={"H"} />
+            <RoomListCard name={"H311"} students={["Y_Belhadj", "F_Tebib", "D_Lounis"]} maxStudents={4} reports={3} block={"H"} />
+            <RoomListCard name={"H312"} students={["S_Mebarki", "R_Benhammou", "L_Khider"]} maxStudents={4} reports={5} block={"H"} />
+            <RoomListCard name={"H313"} students={["I_Hadjar", "T_Benali"]} maxStudents={4} reports={8} block={"H"} />
+            <RoomListCard name={"H314"} students={["C_Bourahla", "K_Zouaoui"]} maxStudents={4} reports={2} block={"H"} />
+            <RoomListCard name={"H315"} students={["A_Toumi", "E_Benmeriem", "M_Hassani"]} maxStudents={4} reports={9} block={"H"} />
+            <RoomListCard name={"H316"} students={["B_Daraji", "S_Nekkache"]} maxStudents={4} reports={1} block={"H"} />
+            <RoomListCard name={"H317"} students={["Z_Mansouri", "N_Benameur", "O_Bekkouche"]} maxStudents={4} reports={6} block={"H"} />
         </div>
       ) : (
       <div className="flex gap-6.5 flex-wrap">
-        
+            <RoomGridCard name={"H309"} students={["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"]} maxStudents={4} reports={14} block={"H"} />
+            <RoomGridCard name={"H310"} students={["A_Bouzar", "N_Zitouni"]} maxStudents={4} reports={7} block={"H"} />
+            <RoomGridCard name={"H311"} students={["Y_Belhadj", "F_Tebib", "D_Lounis"]} maxStudents={4} reports={3} block={"H"} />
+            <RoomGridCard name={"H312"} students={["S_Mebarki", "R_Benhammou", "L_Khider"]} maxStudents={4} reports={5} block={"H"} />
+            <RoomGridCard name={"H313"} students={["I_Hadjar", "T_Benali"]} maxStudents={4} reports={8} block={"H"} />
+            <RoomGridCard name={"H314"} students={["C_Bourahla", "K_Zouaoui"]} maxStudents={4} reports={2} block={"H"} />
+            <RoomGridCard name={"H315"} students={["A_Toumi", "E_Benmeriem", "M_Hassani"]} maxStudents={4} reports={9} block={"H"} />
+            <RoomGridCard name={"H316"} students={["B_Daraji", "S_Nekkache"]} maxStudents={4} reports={1} block={"H"} />
+            <RoomGridCard name={"H317"} students={["Z_Mansouri", "N_Benameur", "O_Bekkouche"]} maxStudents={4} reports={6} block={"H"} />
       </div>
       )}
     </div>
