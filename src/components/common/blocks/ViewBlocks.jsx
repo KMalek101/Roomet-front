@@ -43,6 +43,10 @@ export default function ViewBlocks() {
       value: "noreports",
       label: "No reports",
     },
+    {
+      value: "empty",
+      label: "Empty",
+    },
   ];
 
   const handleSelectViewAs = (value) => {
