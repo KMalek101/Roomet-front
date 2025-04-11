@@ -272,7 +272,7 @@ export default function ViewRooms() {
     return filters.some((filter) => conditions[filter]);
   });
 
-  const sortedRooms = filteredRooms.sort((a, b) => {
+const sortedRooms = filteredRooms.sort((a, b) => {
     const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
     const direction = sortDirection[column];
   
@@ -287,8 +287,10 @@ export default function ViewRooms() {
       valA = availabilityA;
       valB = availabilityB;
     } else if (column === "students") {
-      valA = a.students.length;
-      valB = b.students.length;
+      const studentsA = a.students.join(', ').toLowerCase();
+      const studentsB = b.students.join(', ').toLowerCase();
+      valA = studentsA;
+      valB = studentsB;
     } else {
       valA = a[column];
       valB = b[column];
@@ -319,6 +321,7 @@ export default function ViewRooms() {
       <div className="h-[1px] w-full p-2">
         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
       </div>
+
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
           {sortedRooms.map((room, index) => (
@@ -332,7 +335,9 @@ export default function ViewRooms() {
             />
           ))}
         </div>
+
       ) : (
+
         <div className="flex gap-6.5 flex-wrap">
           {sortedRooms.map((room, index) => (
             <RoomGridCard 
@@ -345,6 +350,7 @@ export default function ViewRooms() {
             />
           ))}
         </div>
+        
       )}
     </div>
   );
