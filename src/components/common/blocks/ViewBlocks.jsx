@@ -276,8 +276,13 @@ export default function ViewBlocks() {
   
     if (!column || !direction) return 0;
   
-    let valA = a[column];
-    let valB = b[column];
+    // Calculate availability as a computed value based on maxStudents and students
+    const availabilityA = ((a.maxStudents - a.students) * 100) / a.maxStudents;
+    const availabilityB = ((b.maxStudents - b.students) * 100) / b.maxStudents;
+  
+    // Handle sorting based on availability or other columns
+    let valA = column === "availability" ? availabilityA : a[column];
+    let valB = column === "availability" ? availabilityB : b[column];
   
     if (typeof valA === "string") {
       valA = valA.toLowerCase();
@@ -288,6 +293,7 @@ export default function ViewBlocks() {
     if (valA > valB) return direction === "asc" ? 1 : -1;
     return 0;
   });
+  
   
   return (
     <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
@@ -307,13 +313,13 @@ export default function ViewBlocks() {
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
             {filteredBlocks.map((block, index) => {
-              return <BlockListCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} reports={block.reports} />
+              return <BlockListCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} availability={(block.maxStudents - block.students) * 100 / block.maxStudents} reports={block.reports} />
             })}
         </div>
       ) : (
       <div className="flex gap-6.5 flex-wrap">
         {filteredBlocks.map((block, index) => {
-          return <BlockGridCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} reports={block.reports} />
+          return <BlockGridCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} availability={(block.maxStudents - block.students) * 100 / block.maxStudents} reports={block.reports} />
         })}
       </div>
       )}
