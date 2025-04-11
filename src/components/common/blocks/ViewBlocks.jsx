@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import BlockGridCard from "./BlockGridCard";
 import BlockListCard from "./BlockListCard";
-import BlockHeader from "./BlockHeader";
+
 export default function ViewBlocks() {
   const [selection, setSelection] = useState("grid");
   const [isOpenViewAs, setIsOpenViewAs] = useState(false);
@@ -152,6 +152,69 @@ export default function ViewBlocks() {
     );
   };
 
+  const [sortDirection, setSortDirection] = useState({
+    name: null,
+    students: null,
+    availability: null,
+    reports: null,
+  });
+
+  const Header = ({ sortDirection, setSortDirection }) => {
+    const handleSort = (column) => {
+      setSortDirection((prev) => {
+        const newDirection = prev[column] === "asc" ? "desc" : "asc";
+        return {
+          name: column === "name" ? newDirection : null,
+          students: column === "students" ? newDirection : null,
+          availability: column === "availability" ? newDirection : null,
+          reports: column === "reports" ? newDirection : null,
+        };
+      });
+    };
+
+    const renderArrow = (direction) => {
+      if (direction === null) return null;
+      return direction === "asc" ? (
+        <span className="ml-2">▲</span>
+      ) : (
+        <span className="ml-2">▼</span>
+      );
+    };
+
+    return (
+      <div className="flex justify-between items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md">
+        <p
+          className="flex items-center cursor-pointer"
+          onClick={() => handleSort("name")}
+        >
+          Name
+          {renderArrow(sortDirection.name)}
+        </p>
+        <p
+          className="flex items-center cursor-pointer"
+          onClick={() => handleSort("students")}
+        >
+          Students
+          {renderArrow(sortDirection.students)}
+        </p>
+        <p
+          className="flex items-center cursor-pointer"
+          onClick={() => handleSort("availability")}
+        >
+          Availability
+          {renderArrow(sortDirection.availability)}
+        </p>
+        <p
+          className="flex items-center cursor-pointer"
+          onClick={() => handleSort("reports")}
+        >
+          Reports
+          {renderArrow(sortDirection.reports)}
+        </p>
+      </div>
+    );
+  };
+
   const handleClickOutside = (event) => {
     const clickedOutsideFilter = filterRef.current && !filterRef.current.contains(event.target);
     const clickedOutsideView = !event.target.closest("#viewMode");
@@ -207,6 +270,25 @@ export default function ViewBlocks() {
     return filters.some((filter) => conditions[filter]);
   });
   
+  const sortedBlocks = filteredBlocks.sort((a, b) => {
+    const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
+    const direction = sortDirection[column];
+  
+    if (!column || !direction) return 0;
+  
+    let valA = a[column];
+    let valB = b[column];
+  
+    if (typeof valA === "string") {
+      valA = valA.toLowerCase();
+      valB = valB.toLowerCase();
+    }
+  
+    if (valA < valB) return direction === "asc" ? -1 : 1;
+    if (valA > valB) return direction === "asc" ? 1 : -1;
+    return 0;
+  });
+  
   return (
     <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
       <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
@@ -218,7 +300,7 @@ export default function ViewBlocks() {
         <Filter />
       </div>
 
-      <BlockHeader />
+      <Header sortDirection={sortDirection} setSortDirection={setSortDirection} />
       <div className="h-[1px] w-full p-2">
         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
       </div>
