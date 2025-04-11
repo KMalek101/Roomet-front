@@ -1,7 +1,7 @@
 'use client'
 
 import Header from "@/components/common/header/Header";
-import { SignUp } from "@/components/common/singup/Signup";
+import { SignUp } from "@/components/singup/Signup";
 import Image from "next/image";
 
 export default function page() {

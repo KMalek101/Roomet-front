@@ -350,7 +350,6 @@ const sortedRooms = filteredRooms.sort((a, b) => {
             />
           ))}
         </div>
-        
       )}
     </div>
   );

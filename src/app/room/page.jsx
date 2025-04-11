@@ -1,7 +1,7 @@
 'use client'
 
 import Header from "@/components/common/header/Header";
-import ViewRooms from "@/components/common/room/ViewRooms";
+import ViewRooms from "@/components/room/ViewRooms";
 import Sidebar from "@/components/common/side bar/Sidebar";
 
 export default function page() {

@@ -1,5 +1,5 @@
 'use client'
-import ViewBlocks from "@/components/common/blocks/ViewBlocks";
+import ViewBlocks from "@/components/blocks/ViewBlocks";
 import Header from "@/components/common/header/Header";
 import Sidebar from "@/components/common/side bar/Sidebar";
 
