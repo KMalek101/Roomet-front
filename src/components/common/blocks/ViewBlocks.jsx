@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import BlockGridCard from "./BlockGridCard";
 import BlockListCard from "./BlockListCard";
-
+import BlockHeader from "./BlockHeader";
 export default function ViewBlocks() {
   const [selection, setSelection] = useState("grid");
   const [isOpenViewAs, setIsOpenViewAs] = useState(false);
@@ -136,7 +136,6 @@ export default function ViewBlocks() {
                 key={option.value}
                 onClick={() => {
                   handleSelectFilter(option.value);
-                  // Don't close dropdown here to allow multiple selections
                 }}
                 className={`flex items-center px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
                   filters.includes(option.value)
@@ -179,69 +178,35 @@ export default function ViewBlocks() {
     };
   }, []);
 
-  const Header = () => {
-    const [sortDirection, setSortDirection] = useState({
-      name: null,
-      students: null,
-      availability: null,
-      reports: null,
-    });
-
-    const handleSort = (column) => {
-      setSortDirection((prev) => {
-        const newDirection = prev[column] === "asc" ? "desc" : "asc";
-        return {
-          name: column === "name" ? newDirection : null,
-          students: column === "students" ? newDirection : null,
-          availability: column === "availability" ? newDirection : null,
-          reports: column === "reports" ? newDirection : null,
-        };
-      });
+  const blockData = [
+    { name: "J", students: 1, availability: 1, reports: 1 },
+    { name: "A", students: 5, availability: 3, reports: 2 },
+    { name: "B", students: 12, availability: 0, reports: 5 },
+    { name: "C", students: 0, availability: 10, reports: 0 },
+    { name: "D", students: 8, availability: 2, reports: 7 },
+    { name: "D", students: 8, availability: 2, reports: 7 },
+    { name: "C", students: 0, availability: 10, reports: 0 },
+    { name: "D", students: 8, availability: 2, reports: 7 },
+    { name: "D", students: 8, availability: 2, reports: 7 },
+    { name: "E", students: 3, availability: 5, reports: 1 },
+    { name: "F", students: 10, availability: 1, reports: 3 },
+    { name: "G", students: 7, availability: 4, reports: 2 },
+    { name: "H", students: 0, availability: 9, reports: 0 },
+    { name: "I", students: 6, availability: 2, reports: 4 },
+  ];
+  
+  const filteredBlocks = blockData.filter((block) => {
+    if (filters.length === 0 || filters.includes("all")) return true;
+  
+    const conditions = {
+      active: block.availability > 0,
+      completed: block.availability === 0,
+      noreports: block.reports === 0,
     };
-
-    const renderArrow = (direction) => {
-      if (direction === null) return null;
-      return direction === "asc" ? (
-        <span className="ml-2">▲</span>
-      ) : (
-        <span className="ml-2">▼</span>
-      );
-    };
-
-    return (
-      <div className="flex justify-between items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md">
-        <p
-          className="flex items-center cursor-pointer"
-          onClick={() => handleSort("name")}
-        >
-          Name
-          {renderArrow(sortDirection.name)}
-        </p>
-        <p
-          className="flex items-center cursor-pointer"
-          onClick={() => handleSort("students")}
-        >
-          Students
-          {renderArrow(sortDirection.students)}
-        </p>
-        <p
-          className="flex items-center cursor-pointer"
-          onClick={() => handleSort("availability")}
-        >
-          Availability
-          {renderArrow(sortDirection.availability)}
-        </p>
-        <p
-          className="flex items-center cursor-pointer"
-          onClick={() => handleSort("reports")}
-        >
-          Reports
-          {renderArrow(sortDirection.reports)}
-        </p>
-      </div>
-    );
-  };
-
+  
+    return filters.some((filter) => conditions[filter]);
+  });
+  
   return (
     <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
       <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
@@ -253,33 +218,21 @@ export default function ViewBlocks() {
         <Filter />
       </div>
 
-      <Header />
+      <BlockHeader />
       <div className="h-[1px] w-full p-2">
         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
       </div>
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
-          <BlockListCard name={"J"} students={1} availability={1} reports={1} />
-          <BlockListCard name={"A"} students={5} availability={3} reports={2} />
-          <BlockListCard name={"B"} students={12} availability={0} reports={5} />
-          <BlockListCard name={"C"} students={0} availability={10} reports={0} />
-          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
-          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
-          <BlockListCard name={"C"} students={0} availability={10} reports={0} />
-          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
-          <BlockListCard name={"D"} students={8} availability={2} reports={7} />
+            {filteredBlocks.map((block, index) => {
+              return <BlockListCard key={index} name={block.name} students={block.students} availability={block.availability} reports={block.reports} />
+            })}
         </div>
       ) : (
       <div className="flex gap-6.5 flex-wrap">
-        <BlockGridCard name={"J"} students={1} availability={1} reports={1} />
-        <BlockGridCard name={"A"} students={5} availability={3} reports={2} />
-        <BlockGridCard name={"B"} students={12} availability={0} reports={5} />
-        <BlockGridCard name={"C"} students={0} availability={10} reports={0} />
-        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
-        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
-        <BlockGridCard name={"C"} students={0} availability={10} reports={0} />
-        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
-        <BlockGridCard name={"D"} students={8} availability={2} reports={7} />
+        {filteredBlocks.map((block, index) => {
+          return <BlockGridCard key={index} name={block.name} students={block.students} availability={block.availability} reports={block.reports} />
+        })}
       </div>
       )}
     </div>
