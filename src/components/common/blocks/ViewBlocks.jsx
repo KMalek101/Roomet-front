@@ -256,9 +256,9 @@ export default function ViewBlocks() {
     { name: "D", students: 8, maxStudents: 2000, reports: 7 },
     { name: "D", students: 8, maxStudents: 2000, reports: 7 },
     { name: "E", students: 3, maxStudents: 2000, reports: 1 },
-    { name: "F", students: 10, maxStudents: 2000, reports: 3 },
+    { name: "F", students: 2, maxStudents: 2000, reports: 3 },
     { name: "G", students: 7, maxStudents: 2000, reports: 2 },
-    { name: "H", students: 0, maxStudents: 2000, reports: 0 },
+    { name: "H", students: 2000, maxStudents: 2000, reports: 0 },
     { name: "I", students: 6, maxStudents: 2000, reports: 4 },
   ];
   
@@ -269,6 +269,7 @@ export default function ViewBlocks() {
       active: block.students < block.maxStudents,
       completed: block.students == block.maxStudents,
       noreports: block.reports === 0,
+      empty: block.students == 0,
     };
   
     return filters.some((filter) => conditions[filter]);
