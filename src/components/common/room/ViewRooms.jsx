@@ -7,6 +7,13 @@ export default function ViewRooms() {
   const [isOpenViewAs, setIsOpenViewAs] = useState(false);
   const [isOpenFilter, setIsOpenFilter] = useState(false);
   const [filters, setFilters] = useState([]);
+  const [sortDirection, setSortDirection] = useState({
+    name: null,
+    students: null,
+    availability: null,
+    reports: null,
+    block: null,
+  });
 
   const filterRef = useRef(null); 
   const optionsViewAs = [
@@ -42,6 +49,10 @@ export default function ViewRooms() {
     {
       value: "noreports",
       label: "No reports",
+    },
+    {
+      value: "empty",
+      label: "Empty",
     },
   ];
 
@@ -108,8 +119,6 @@ export default function ViewRooms() {
          className="relative">
           
         <button
-        //   ref={filterRef}
-          
           className="bg-[var(--g-color-opacity)] h-[44px] w-full flex items-center justify-between rounded-md px-3 gap-2 py-2 cursor-pointer"
         >
           <svg
@@ -129,14 +138,13 @@ export default function ViewRooms() {
           <div 
             ref={filterRef}
             className="absolute z-10 mt-1 w-42 bg-white border border-gray-300 rounded-md shadow-md"
-            onClick={(e) => e.stopPropagation()} // Prevent clicks inside dropdown from closing it
+            onClick={(e) => e.stopPropagation()}
           >
             {optionsFilter.map((option) => (
               <div
                 key={option.value}
                 onClick={() => {
                   handleSelectFilter(option.value);
-                  // Don't close dropdown here to allow multiple selections
                 }}
                 className={`flex items-center px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
                   filters.includes(option.value)
@@ -161,11 +169,6 @@ export default function ViewRooms() {
     console.log("event.target:", event.target);
     console.log("contains?", filterRef.current?.contains(event.target));
 
-
-    // if (clickedOutsideFilter) {
-    //   setIsOpenFilter(false);
-    // }
-  
     if (clickedOutsideView) {
       setIsOpenViewAs(false);
     }
@@ -180,14 +183,6 @@ export default function ViewRooms() {
   }, []);
 
   const Header = () => {
-    const [sortDirection, setSortDirection] = useState({
-      name: null,
-      students: null,
-      availability: null,
-      reports: null,
-      block: null,
-    });
-
     const handleSort = (column) => {
       setSortDirection((prev) => {
         const newDirection = prev[column] === "asc" ? "desc" : "asc";
@@ -251,6 +246,64 @@ export default function ViewRooms() {
     );
   };
 
+  const roomData = [
+    { name: "H309", students: ["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"], maxStudents: 4, reports: 14, block: "H" },
+    { name: "H310", students: ["A_Bouzar", "N_Zitouni"], maxStudents: 4, reports: 7, block: "H" },
+    { name: "H311", students: ["Y_Belhadj", "F_Tebib", "D_Lounis"], maxStudents: 4, reports: 3, block: "H" },
+    { name: "H312", students: ["S_Mebarki", "R_Benhammou", "L_Khider"], maxStudents: 4, reports: 5, block: "H" },
+    { name: "H313", students: ["I_Hadjar", "T_Benali"], maxStudents: 4, reports: 8, block: "H" },
+    { name: "H314", students: ["C_Bourahla", "K_Zouaoui"], maxStudents: 4, reports: 2, block: "H" },
+    { name: "H315", students: ["A_Toumi", "E_Benmeriem", "M_Hassani"], maxStudents: 4, reports: 9, block: "H" },
+    { name: "H316", students: ["B_Daraji", "S_Nekkache"], maxStudents: 4, reports: 1, block: "H" },
+    { name: "H317", students: ["Z_Mansouri", "N_Benameur", "O_Bekkouche"], maxStudents: 4, reports: 6, block: "H" },
+  ];
+
+  // Filter rooms based on selected filters
+  const filteredRooms = roomData.filter((room) => {
+    if (filters.length === 0 || filters.includes("all")) return true;
+  
+    const conditions = {
+      active: room.students.length < room.maxStudents,
+      completed: room.students.length === room.maxStudents,
+      noreports: room.reports === 0,
+      empty: room.students.length === 0,
+    };
+  
+    return filters.some((filter) => conditions[filter]);
+  });
+
+  const sortedRooms = filteredRooms.sort((a, b) => {
+    const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
+    const direction = sortDirection[column];
+  
+    if (!column || !direction) return 0;
+  
+    const availabilityA = (a.maxStudents - a.students.length) * 100 / a.maxStudents;
+    const availabilityB = (b.maxStudents - b.students.length) * 100 / b.maxStudents;
+  
+    let valA, valB;
+    
+    if (column === "availability") {
+      valA = availabilityA;
+      valB = availabilityB;
+    } else if (column === "students") {
+      valA = a.students.length;
+      valB = b.students.length;
+    } else {
+      valA = a[column];
+      valB = b[column];
+    }
+  
+    if (typeof valA === "string") {
+      valA = valA.toLowerCase();
+      valB = valB.toLowerCase();
+    }
+  
+    if (valA < valB) return direction === "asc" ? -1 : 1;
+    if (valA > valB) return direction === "asc" ? 1 : -1;
+    return 0;
+  });
+  
   return (
     <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
       <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
@@ -268,28 +321,30 @@ export default function ViewRooms() {
       </div>
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
-            <RoomListCard name={"H309"} students={["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"]} maxStudents={4} reports={14} block={"H"} />
-            <RoomListCard name={"H310"} students={["A_Bouzar", "N_Zitouni"]} maxStudents={4} reports={7} block={"H"} />
-            <RoomListCard name={"H311"} students={["Y_Belhadj", "F_Tebib", "D_Lounis"]} maxStudents={4} reports={3} block={"H"} />
-            <RoomListCard name={"H312"} students={["S_Mebarki", "R_Benhammou", "L_Khider"]} maxStudents={4} reports={5} block={"H"} />
-            <RoomListCard name={"H313"} students={["I_Hadjar", "T_Benali"]} maxStudents={4} reports={8} block={"H"} />
-            <RoomListCard name={"H314"} students={["C_Bourahla", "K_Zouaoui"]} maxStudents={4} reports={2} block={"H"} />
-            <RoomListCard name={"H315"} students={["A_Toumi", "E_Benmeriem", "M_Hassani"]} maxStudents={4} reports={9} block={"H"} />
-            <RoomListCard name={"H316"} students={["B_Daraji", "S_Nekkache"]} maxStudents={4} reports={1} block={"H"} />
-            <RoomListCard name={"H317"} students={["Z_Mansouri", "N_Benameur", "O_Bekkouche"]} maxStudents={4} reports={6} block={"H"} />
+          {sortedRooms.map((room, index) => (
+            <RoomListCard 
+              key={index} 
+              name={room.name} 
+              students={room.students} 
+              maxStudents={room.maxStudents} 
+              reports={room.reports} 
+              block={room.block} 
+            />
+          ))}
         </div>
       ) : (
-      <div className="flex gap-6.5 flex-wrap">
-            <RoomGridCard name={"H309"} students={["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"]} maxStudents={4} reports={14} block={"H"} />
-            <RoomGridCard name={"H310"} students={["A_Bouzar", "N_Zitouni"]} maxStudents={4} reports={7} block={"H"} />
-            <RoomGridCard name={"H311"} students={["Y_Belhadj", "F_Tebib", "D_Lounis"]} maxStudents={4} reports={3} block={"H"} />
-            <RoomGridCard name={"H312"} students={["S_Mebarki", "R_Benhammou", "L_Khider"]} maxStudents={4} reports={5} block={"H"} />
-            <RoomGridCard name={"H313"} students={["I_Hadjar", "T_Benali"]} maxStudents={4} reports={8} block={"H"} />
-            <RoomGridCard name={"H314"} students={["C_Bourahla", "K_Zouaoui"]} maxStudents={4} reports={2} block={"H"} />
-            <RoomGridCard name={"H315"} students={["A_Toumi", "E_Benmeriem", "M_Hassani"]} maxStudents={4} reports={9} block={"H"} />
-            <RoomGridCard name={"H316"} students={["B_Daraji", "S_Nekkache"]} maxStudents={4} reports={1} block={"H"} />
-            <RoomGridCard name={"H317"} students={["Z_Mansouri", "N_Benameur", "O_Bekkouche"]} maxStudents={4} reports={6} block={"H"} />
-      </div>
+        <div className="flex gap-6.5 flex-wrap">
+          {sortedRooms.map((room, index) => (
+            <RoomGridCard 
+              key={index} 
+              name={room.name} 
+              students={room.students} 
+              maxStudents={room.maxStudents} 
+              reports={room.reports} 
+              block={room.block} 
+            />
+          ))}
+        </div>
       )}
     </div>
   );
