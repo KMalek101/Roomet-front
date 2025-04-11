@@ -179,28 +179,28 @@ export default function ViewBlocks() {
   }, []);
 
   const blockData = [
-    { name: "J", students: 1, availability: 1, reports: 1 },
-    { name: "A", students: 5, availability: 3, reports: 2 },
-    { name: "B", students: 12, availability: 0, reports: 5 },
-    { name: "C", students: 0, availability: 10, reports: 0 },
-    { name: "D", students: 8, availability: 2, reports: 7 },
-    { name: "D", students: 8, availability: 2, reports: 7 },
-    { name: "C", students: 0, availability: 10, reports: 0 },
-    { name: "D", students: 8, availability: 2, reports: 7 },
-    { name: "D", students: 8, availability: 2, reports: 7 },
-    { name: "E", students: 3, availability: 5, reports: 1 },
-    { name: "F", students: 10, availability: 1, reports: 3 },
-    { name: "G", students: 7, availability: 4, reports: 2 },
-    { name: "H", students: 0, availability: 9, reports: 0 },
-    { name: "I", students: 6, availability: 2, reports: 4 },
+    { name: "J", students: 1, maxStudents: 2000, reports: 1 },
+    { name: "A", students: 5, maxStudents: 2000, reports: 2 },
+    { name: "B", students: 12, maxStudents: 2000, reports: 5 },
+    { name: "C", students: 0, maxStudents: 2000, reports: 0 },
+    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
+    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
+    { name: "C", students: 0, maxStudents: 2000, reports: 0 },
+    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
+    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
+    { name: "E", students: 3, maxStudents: 2000, reports: 1 },
+    { name: "F", students: 10, maxStudents: 2000, reports: 3 },
+    { name: "G", students: 7, maxStudents: 2000, reports: 2 },
+    { name: "H", students: 0, maxStudents: 2000, reports: 0 },
+    { name: "I", students: 6, maxStudents: 2000, reports: 4 },
   ];
   
   const filteredBlocks = blockData.filter((block) => {
     if (filters.length === 0 || filters.includes("all")) return true;
   
     const conditions = {
-      active: block.availability > 0,
-      completed: block.availability === 0,
+      active: block.students < block.maxStudents,
+      completed: block.students == block.maxStudents,
       noreports: block.reports === 0,
     };
   
@@ -225,13 +225,13 @@ export default function ViewBlocks() {
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
             {filteredBlocks.map((block, index) => {
-              return <BlockListCard key={index} name={block.name} students={block.students} availability={block.availability} reports={block.reports} />
+              return <BlockListCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} reports={block.reports} />
             })}
         </div>
       ) : (
       <div className="flex gap-6.5 flex-wrap">
         {filteredBlocks.map((block, index) => {
-          return <BlockGridCard key={index} name={block.name} students={block.students} availability={block.availability} reports={block.reports} />
+          return <BlockGridCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} reports={block.reports} />
         })}
       </div>
       )}
