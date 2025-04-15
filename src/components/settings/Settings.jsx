@@ -53,10 +53,10 @@ export default function Settings() {
                                 <PhoneInputWithCountrySelect
                                     international
                                     defaultCountry="DZ"
-                                    value={"233"}
-                                    style={{ '--PhoneInputCountryFlag-height': '2em' }}
+                                    value={"+213"}
+                                    style={{ '--PhoneInputCountryFlag-height': '2em'}}
                                     onChange={(e) => console.log(e)}
-                                    className="!rounded-lg !border !border-gray-300 !shadow-sm"
+                                    className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-md focus:outline-1 focus:outline-[var(--green-color)]"
                                 />
                             </div>
 

@@ -52,6 +52,12 @@
   --sidebar-height: calc(100vh - 72px);
 }
 
+.PhoneInputInput:focus,
+.PhoneInputCountrySelect:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 body{
   margin: 0;
   padding: 0;
