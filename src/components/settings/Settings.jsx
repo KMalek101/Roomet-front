@@ -117,7 +117,7 @@ export default function Settings() {
     };
 
     return (
-        <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 rounded-md flex-1">
+        <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 rounded-md flex-1 relative">
             <div className="flex gap-8">
                 {/* Left menu */}
                 <div className="flex flex-col gap-2">
@@ -152,6 +152,10 @@ export default function Settings() {
                     {renderSettings()}
                 </div>
             </div>
+            <div className="absolute bottom-2 right-2">
+                <button className="cursor-pointer bg-[var(--green-color)] text-white px-6 py-2 rounded-md shadow hover:brightness-110 transition">Save Changes</button>
+            </div>
+                  
         </div>
     );
 }
