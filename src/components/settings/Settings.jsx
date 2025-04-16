@@ -5,6 +5,19 @@ import 'react-phone-number-input/style.css'
 export default function Settings() {
     const [active, setActive] = useState("Account");
 
+    const [fullName, setFullName] = useState("Kaouche Malek");
+    const [username, setUsername] = useState("KMalek101");
+    const [email, setEmail] = useState("m_kaouche@estin.dz");
+    const [phone, setPhone] = useState("+213");
+
+    const [emailNotifications, setEmailNotifications] = useState(false);
+    const [pushNotifications, setPushNotifications] = useState(false);
+
+    const [passwordType, setPasswordType] = useState("Change password");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassord, setConfirmPassword] = useState("");
+
     const settings = [
         "Account",
         "Notifications",
@@ -22,7 +35,8 @@ export default function Settings() {
                                 <label className="block mb-2 font-medium">Full name</label>
                                 <input
                                     type="text"
-                                    value={"Kaouche Malek"}
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
                                     className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
                                     placeholder="Your username"
                                 />
@@ -32,7 +46,8 @@ export default function Settings() {
                                 <label className="block mb-2 font-medium">Username</label>
                                 <input
                                     type="text"
-                                    value={"KMalek101"}
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}                                    
                                     className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
                                     placeholder="Your username"
                                 />
@@ -41,8 +56,8 @@ export default function Settings() {
                             <div>
                                 <label className="block mb-2 font-medium">Email</label>
                                 <input
-                                    type="text"
-                                    value={"m_kaouche@estin.dz"}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
                                     placeholder="Your username"
                                 />
@@ -53,64 +68,152 @@ export default function Settings() {
                                 <PhoneInputWithCountrySelect
                                     international
                                     defaultCountry="DZ"
-                                    value={"+213"}
+                                    value={phone}
+                                    onChange={(e) => setPhone(e)}                                    
                                     style={{ '--PhoneInputCountryFlag-height': '2em'}}
-                                    onChange={(e) => console.log(e)}
                                     className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-md focus:outline-1 focus:outline-[var(--green-color)]"
                                 />
                             </div>
 
                         </div>
                 );
+
             case "Notifications":
                 return (
-                    <>
-                        <label className="flex items-center gap-2 mb-2">
-                            <input type="checkbox" />
-                            Email Notifications
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input type="checkbox" />
-                            Push Notifications
-                        </label>
-                    </>
+                    <div className="flex flex-col gap-6">
+                        <div className="flex items-center gap-4 text-[12px]">
+                            <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-[12px] ${emailNotifications ? 'bg-[var(--green-color)]' : 'bg-[var(--g-color-opacity)]'}`}
+                                onClick={() => setEmailNotifications(!emailNotifications)}
+                                >
+                                {emailNotifications && (
+                                    <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-3 h-3"
+                                    >
+                                    <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M21.2287 6.60355C21.6193 6.99407 21.6193 7.62723 21.2287 8.01776L10.2559 18.9906C9.86788 19.3786 9.23962 19.3814 8.84811 18.9969L2.66257 12.9218C2.26855 12.5349 2.26284 11.9017 2.64983 11.5077L3.35054 10.7942C3.73753 10.4002 4.37067 10.3945 4.7647 10.7815L9.53613 15.4677L19.1074 5.89644C19.4979 5.50592 20.1311 5.50591 20.5216 5.89644L21.2287 6.60355Z"
+                                        fill="white"
+                                    />
+                                    </svg>
+                                )}
+                            </div>
+                            <p className="font-medium text-lg">Email notifications</p>
+                        </div>
+                        <div className="flex items-center gap-4 text-[12px]">
+                            <div className={`w-4.5 h-4 rounded-sm cursor-pointer flex items-center justify-center text-white text-[12px] ${pushNotifications ? 'bg-[var(--green-color)]' : 'bg-[var(--g-color-opacity)]'}`}
+                                onClick={() => setPushNotifications(!pushNotifications)}
+                                >
+                                {pushNotifications && (
+                                    <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-3 h-3"
+                                    >
+                                    <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M21.2287 6.60355C21.6193 6.99407 21.6193 7.62723 21.2287 8.01776L10.2559 18.9906C9.86788 19.3786 9.23962 19.3814 8.84811 18.9969L2.66257 12.9218C2.26855 12.5349 2.26284 11.9017 2.64983 11.5077L3.35054 10.7942C3.73753 10.4002 4.37067 10.3945 4.7647 10.7815L9.53613 15.4677L19.1074 5.89644C19.4979 5.50592 20.1311 5.50591 20.5216 5.89644L21.2287 6.60355Z"
+                                        fill="white"
+                                    />
+                                    </svg>
+                                )}
+                            </div>
+                            <p className="font-medium text-lg">Push notifications</p>
+                        </div>
+                    </div>
                 );
+
             case "Language":
                 return (
                     <>
                         <label className="block mb-2 font-medium">Choose Language</label>
-                        <select className="p-2 rounded text-black w-full">
+                        <select className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]">
                             <option>English</option>
                             <option>French</option>
-                            <option>Arabic</option>
                         </select>
                     </>
                 );
+
             case "Appearance":
                 return (
                     <>
                         <label className="block mb-2 font-medium">Theme</label>
-                        <select className="p-2 rounded text-black w-full mb-4">
+                        <select className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]">
                             <option>System</option>
                             <option>Light</option>
                             <option>Dark</option>
                         </select>
-                        <label className="block mb-2 font-medium">Accent Color</label>
-                        <input type="color" className="w-10 h-10" />
                     </>
                 );
+
             case "Privacy & Security":
                 return (
                     <>
-                        <label className="flex items-center gap-2 mb-2">
-                            <input type="checkbox" />
-                            Make Profile Private
-                        </label>
-                        <button className="mt-4 p-2 bg-red-500 text-white rounded hover:bg-red-600">
-                            Delete My Account
-                        </button>
+                        <div className="flex justify-between items-center pr-6"> 
+                            <p className="font-medium text-lg">Password</p>
+                            <button
+                             onClick={() => setPasswordType((value) => value === "Change password" ? "Hide" : "Change password")}
+                             className="bg-[var(--g-color-opacity)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer">{passwordType}
+                            </button>
+                        </div>
+
+                        <div className="h-[1px] w-full px-2 py-5">
+                            <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
+                        </div>
+
+                        {passwordType === "Hide" && (
+                            <div className="flex flex-col gap-6 pb-3">
+                                <div>
+                                    <label className="block mb-2 font-medium">Old password</label>
+                                    <input
+                                        value={oldPassword}
+                                        type="password"
+                                        onChange={(e) => setOldPassword(e.target.value)}
+                                        className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block mb-2 font-medium">New password</label>
+                                    <input
+                                        value={newPassword}
+                                        type="password"
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block mb-2 font-medium">Confirm new password</label>
+                                    <input
+                                        value={confirmPassord}
+                                        type="password"
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
+                                    />
+                                </div>
+
+                                <div className="flex gap-4 items-center">
+                                    <button className="bg-[var(--g-color-opacity)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer w-[200px]">Update password</button>
+                                    <a href="/" className="text-[var(--green-color)] font-[500] text-lg hover:underline">I forgot my password</a>                                    
+                                </div>
+                            </div>
+                            
+                        )}   
+
+                        <div className="flex justify-between items-center pr-6"> 
+                            <p className="font-medium text-lg">Delete your account</p>
+                            <button
+                             className="bg-[var(--r-color)] text-[var(--w-color)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer hover:bg-[var(--r-color-hover)]">Delete my account</button>
+                        </div>
                     </>
                 );
+
             default:
                 return <p>Unknown setting</p>;
         }
@@ -118,7 +221,7 @@ export default function Settings() {
 
     return (
         <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 rounded-md flex-1 relative">
-            <div className="flex gap-8">
+            <div className="flex gap-8 h-full">
                 {/* Left menu */}
                 <div className="flex flex-col gap-2">
                     {settings.map((setting) => (
@@ -146,12 +249,16 @@ export default function Settings() {
                 <div className="flex-1 p-4 bg-[var(--primary-color)] rounded-md text-[var(--black-color)]">
                     <h2 className="text-xl font-bold mb-4">{active}</h2>
                     <p className="text-xs text-[var(--g-color)]">Update your {active} settings.</p>
+
                     <div className="h-[1px] w-full px-2 py-5">
                         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
                     </div>
+
                     {renderSettings()}
                 </div>
             </div>
+
+            {/* Submit button */}
             <div className="absolute bottom-2 right-2">
                 <button className="cursor-pointer bg-[var(--green-color)] text-white px-6 py-2 rounded-md shadow hover:brightness-110 transition">Save Changes</button>
             </div>
