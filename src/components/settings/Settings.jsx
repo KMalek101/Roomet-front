@@ -1,22 +1,55 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import 'react-phone-number-input/style.css'
 
 export default function Settings() {
     const [active, setActive] = useState("Account");
 
-    const [fullName, setFullName] = useState("Kaouche Malek");
-    const [username, setUsername] = useState("KMalek101");
-    const [email, setEmail] = useState("m_kaouche@estin.dz");
-    const [phone, setPhone] = useState("+213");
-
-    const [emailNotifications, setEmailNotifications] = useState(false);
-    const [pushNotifications, setPushNotifications] = useState(false);
-
-    const [passwordType, setPasswordType] = useState("Change password");
-    const [oldPassword, setOldPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassord, setConfirmPassword] = useState("");
+    const initialValues = useMemo(() => ({
+        fullName: "Kaouche Malek",
+        username: "KMalek101",
+        email: "m_kaouche@estin.dz",
+        phone: "+213",
+        emailNotifications: false,
+        pushNotifications: false,
+        passwordType: "Change password",
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      }), []);
+    
+      const [fullName, setFullName] = useState(initialValues.fullName);
+      const [username, setUsername] = useState(initialValues.username);
+      const [email, setEmail] = useState(initialValues.email);
+      const [phone, setPhone] = useState(initialValues.phone);
+    
+      const [emailNotifications, setEmailNotifications] = useState(initialValues.emailNotifications);
+      const [pushNotifications, setPushNotifications] = useState(initialValues.pushNotifications);
+    
+      const [passwordType, setPasswordType] = useState(initialValues.passwordType);
+      const [oldPassword, setOldPassword] = useState(initialValues.oldPassword);
+      const [newPassword, setNewPassword] = useState(initialValues.newPassword);
+      const [confirmPassword, setConfirmPassword] = useState(initialValues.confirmPassword);
+    
+      // Check for dirty state
+      const isDirty = useMemo(() => {
+        return (
+          fullName !== initialValues.fullName ||
+          username !== initialValues.username ||
+          email !== initialValues.email ||
+          phone !== initialValues.phone ||
+          emailNotifications !== initialValues.emailNotifications ||
+          pushNotifications !== initialValues.pushNotifications ||
+          oldPassword !== initialValues.oldPassword ||
+          newPassword !== initialValues.newPassword ||
+          confirmPassword !== initialValues.confirmPassword
+        );
+      }, [
+        fullName, username, email, phone,
+        emailNotifications, pushNotifications,
+        oldPassword, newPassword, confirmPassword,
+        initialValues
+      ]);
 
     const settings = [
         "Account",
@@ -132,7 +165,7 @@ export default function Settings() {
                 return (
                     <>
                         <label className="block mb-2 font-medium">Choose Language</label>
-                        <select className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]">
+                        <select className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)] cursor-pointer">
                             <option>English</option>
                             <option>French</option>
                         </select>
@@ -143,7 +176,7 @@ export default function Settings() {
                 return (
                     <>
                         <label className="block mb-2 font-medium">Theme</label>
-                        <select className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]">
+                        <select className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)] cursor-pointer">
                             <option>System</option>
                             <option>Light</option>
                             <option>Dark</option>
@@ -158,7 +191,7 @@ export default function Settings() {
                             <p className="font-medium text-lg">Password</p>
                             <button
                              onClick={() => setPasswordType((value) => value === "Change password" ? "Hide" : "Change password")}
-                             className="bg-[var(--g-color-opacity)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer">{passwordType}
+                             className="bg-[var(--g-color-opacity)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer shadow hover:brightness-10">{passwordType}
                             </button>
                         </div>
 
@@ -191,7 +224,7 @@ export default function Settings() {
                                 <div>
                                     <label className="block mb-2 font-medium">Confirm new password</label>
                                     <input
-                                        value={confirmPassord}
+                                        value={confirmPassword}
                                         type="password"
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         className="bg-[var(--g-color-opacity)] w-[350px] rounded-md py-1.5 h-[44px] px-4 text-sm focus:outline-1 focus:outline-[var(--green-color)]"
@@ -199,7 +232,7 @@ export default function Settings() {
                                 </div>
 
                                 <div className="flex gap-4 items-center">
-                                    <button className="bg-[var(--g-color-opacity)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer w-[200px]">Update password</button>
+                                    <button className="bg-[var(--g-color-opacity)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer w-[200px] shadow hover:brightness-10">Update password</button>
                                     <a href="/" className="text-[var(--green-color)] font-[500] text-lg hover:underline">I forgot my password</a>                                    
                                 </div>
                             </div>
@@ -208,8 +241,7 @@ export default function Settings() {
 
                         <div className="flex justify-between items-center pr-6"> 
                             <p className="font-medium text-lg">Delete your account</p>
-                            <button
-                             className="bg-[var(--r-color)] text-[var(--w-color)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer hover:bg-[var(--r-color-hover)]">Delete my account</button>
+                            <button className="bg-[var(--r-color)] text-[var(--w-color)] rounded-md py-1.5 h-[44px] px-4 text-md font-medium cursor-pointer shadow hover:brightness-95 transition">Delete my account</button>
                         </div>
                     </>
                 );
@@ -259,8 +291,10 @@ export default function Settings() {
             </div>
 
             {/* Submit button */}
-            <div className="absolute bottom-2 right-2">
-                <button className="cursor-pointer bg-[var(--green-color)] text-white px-6 py-2 rounded-md shadow hover:brightness-110 transition">Save Changes</button>
+            <div className="ml-auto">
+                <button 
+                 disabled={!isDirty}
+                 className={`text-[var(--w-color)] px-6 py-2 rounded-md transition bg-[var(--green-color)]  ${isDirty ? "cursor-pointer shadow hover:brightness-110" : "cursor-not-allowed brightness-80"}`}>Save Changes</button>
             </div>
                   
         </div>
