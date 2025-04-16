@@ -1,6 +1,6 @@
 export default function RoomListCard({ name, students, maxStudents, reports, block }) {
     return(
-        <div className="grid grid-cols-5 items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md gap-62">
+        <div className="grid grid-cols-5 items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md gap-62 cursor-pointer">
             <p>{name}</p>
             <p className="">{students.map((student) => {
                 return <p>{student}</p>
