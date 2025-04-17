@@ -11,7 +11,6 @@ export default function page() {
       <div className="flex overflow-hidden">
         <Sidebar />
         <div className="flex flex-col py-6 px-12 flex-1 overflow-y-auto h-screen no-scrollbar pb-24">
-          <p className="font-semibold text-2xl pb-4">Room H309</p>
             <Room />
         </div>
       </div>
