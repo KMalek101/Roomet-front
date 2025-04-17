@@ -9,7 +9,7 @@ export default function Sidebar() {
 
   const menuItems = [
     { label: "Profile" },
-    { label: "Room" },
+    { label: "Rooms" },
     { label: "Reports" },
     { label: "Notifications" },
     { label: "Events" },
