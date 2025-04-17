@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import RoomListCard from "./RoomListCard";
 import RoomGridCard from "./RoomGridCard";
+import { useRouter } from "next/navigation";
 
 export default function ViewRooms() {
   const [selection, setSelection] = useState("grid");
@@ -15,6 +16,7 @@ export default function ViewRooms() {
     block: null,
   });
 
+  const router = useRouter();
   const filterRef = useRef(null); 
   const optionsViewAs = [
     {
@@ -306,6 +308,9 @@ const sortedRooms = filteredRooms.sort((a, b) => {
     return 0;
   });
   
+  const handleRoomClick = (room) => {
+    router.push(`/rooms/${room.name}`);
+  }
   return (
     <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
       <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
@@ -325,14 +330,16 @@ const sortedRooms = filteredRooms.sort((a, b) => {
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
           {sortedRooms.map((room, index) => (
-            <RoomListCard 
-              key={index} 
-              name={room.name} 
-              students={room.students} 
-              maxStudents={room.maxStudents} 
-              reports={room.reports} 
-              block={room.block} 
-            />
+            <div onClick={() => handleRoomClick(room)}>
+              <RoomListCard
+                key={index}
+                name={room.name}
+                students={room.students}
+                maxStudents={room.maxStudents}
+                reports={room.reports}
+                block={room.block}
+              />
+            </div>
           ))}
         </div>
 
@@ -340,14 +347,16 @@ const sortedRooms = filteredRooms.sort((a, b) => {
 
         <div className="flex gap-6.5 flex-wrap">
           {sortedRooms.map((room, index) => (
-            <RoomGridCard 
-              key={index} 
-              name={room.name} 
-              students={room.students} 
-              maxStudents={room.maxStudents} 
-              reports={room.reports} 
-              block={room.block} 
-            />
+            <div onClick={() => handleRoomClick(room)}>
+              <RoomGridCard
+                key={index}
+                name={room.name}
+                students={room.students}
+                maxStudents={room.maxStudents}
+                reports={room.reports}
+                block={room.block}
+              />
+            </div>
           ))}
         </div>
       )}
