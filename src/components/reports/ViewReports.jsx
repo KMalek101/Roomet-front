@@ -9,7 +9,7 @@ export default function ViewReports() {
   const [filters, setFilters] = useState([]);
   const [sortDirection, setSortDirection] = useState({
     status: null,
-    number: null,
+    block: null,
     date: null,
     urgency: null,
   });
@@ -170,7 +170,7 @@ export default function ViewReports() {
         const newDirection = prev[column] === "asc" ? "desc" : "asc";
         return {
           date: column === "date" ? newDirection : null,
-          number: column === "number" ? newDirection : null,
+          block: column === "block" ? newDirection : null,
           status: column === "status" ? newDirection : null,
           urgency: column === "urgency" ? newDirection : null,
         };
@@ -197,10 +197,10 @@ export default function ViewReports() {
         </p>
         <p
           className="flex items-center cursor-pointer"
-          onClick={() => handleSort("number")}
+          onClick={() => handleSort("block")}
         >
-          Number
-          {renderArrow(sortDirection.number)}
+          block
+          {renderArrow(sortDirection.block)}
         </p>
         <p
           className="flex items-center cursor-pointer"
