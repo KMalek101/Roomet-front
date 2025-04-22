@@ -2,7 +2,7 @@
 
 import Header from "@/components/common/header/Header";
 import Sidebar from "@/components/common/side bar/Sidebar";
-import Reports from "@/components/reports/Reports";
+import ViewReports from "@/components/reports/ViewReports";
 
 export default function page() {
   return (
@@ -12,7 +12,7 @@ export default function page() {
         <Sidebar />
         <div className="flex flex-col py-6 px-12 flex-1 overflow-y-auto h-screen no-scrollbar pb-24">
           <p className="font-semibold text-2xl pb-4">Reports</p>
-          <Reports />
+          <ViewReports />
         </div>
       </div>
     </div>
