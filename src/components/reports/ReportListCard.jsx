@@ -1,14 +1,10 @@
-export default function ReportListCard({ name, students, maxStudents, reports, block }) {
+export default function ReportListCard({ status, block, date, urgency}) {
     return(
-        <div className="grid grid-cols-5 items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md gap-62 cursor-pointer">
-            <p>{name}</p>
-            <p className="">{students.map((student) => {
-                return <p>{student}</p>
-            })}
-            </p>
-            <p className={`${students.length === maxStudents ? "text-[var(--r-color)]" : "text-[var(--green-color)]"}`}>{students.length} / {maxStudents}</p>
-            <p className="">{reports}</p>
-            <p className="">{block}</p>
+        <div className="grid grid-cols-4 items-center p-4 px-9 bg-[var(--secondary-color)] rounded-md gap-62 cursor-pointer">
+            <p className={`${status === "Open" ? "text-[var(--green-color)]" : "text-[var(--r-color)]"}`}>{status}</p>
+            <p>{block}</p>
+            <p>{date}</p>
+            <p className={`${urgency === "High" ? "text-[var(--r-color)]" : urgency === "Medium" ? "text-[var(--g-color)]" : "text-[var(--green-color)]"}`}>{urgency}</p>
         </div>
     )
 }
