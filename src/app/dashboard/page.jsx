@@ -6,7 +6,7 @@ import Sidebar from "@/components/common/side bar/Sidebar";
 import { useState } from "react";
 
 export default function page() {
-  const [showAddBlock, setShowAddBlock] = useState(false); // Changed initial state to false
+  const [showAddBlock, setShowAddBlock] = useState(false); 
   
   return (
     <div className="h-screen w-screen overflow-hidden">
