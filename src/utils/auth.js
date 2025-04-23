@@ -6,7 +6,27 @@ export async function signUp(data) {
       const response = await axios.post(`${API_BASE_URL}/api/auth/register-director`, data);
       return response.data;
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error('Error signing up:', error);
       throw error;
     }
+}
+
+// auth.js (Login function)
+export async function login(data) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/director-login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Login failed");
+    }
+    
+    return result;
 }
