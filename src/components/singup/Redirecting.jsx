@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -14,14 +12,27 @@ export default function Redirecting() {
 
     useEffect(() => {
         if (id) {
-            setTimeout(() => {
-                setSuccess(true);
-                setLoading(false);
-
-                setTimeout(() => {
-                    router.replace("/dashboard");
-                }, 1000);
-            }, 2000);
+            // 🪄 Include credentials to allow cookie-based session magic
+            fetch(`http://localhost:5000/api/auth/verify-email/${id}`, {
+                method: "GET",
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        setSuccess(true);
+                        setTimeout(() => {
+                            router.replace("/dashboard");
+                        }, 1000);
+                    } else {
+                        setError(true);
+                    }
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error("Verification error:", error);
+                    setError(true);
+                    setLoading(false);
+                });
         } else {
             setError(true);
             setLoading(false);
@@ -44,7 +55,7 @@ export default function Redirecting() {
                 <>
                     <h2 className="text-2xl font-bold text-red-500">Error</h2>
                     <p className="text-sm text-red-500">
-                        Verification ID not found. Please try again.
+                        Verification ID not found or expired. Please try again.
                     </p>
                 </>
             ) : success ? (
