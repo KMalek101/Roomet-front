@@ -11,7 +11,6 @@ export async function signUp(data) {
     }
 }
 
-// auth.js (Login function)
 export async function login(data) {
     const response = await fetch(`${API_BASE_URL}/api/auth/director-login`, {
         method: "POST",

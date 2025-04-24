@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const useAuth = () => {
   const [loading, setLoading] = useState(true);
@@ -10,14 +10,14 @@ const useAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/is-logged-in}`, {
+        const res = await fetch(`${API_BASE_URL}/api/auth/is-logged-in`, {
           method: "GET",
           credentials: "include", 
         });
-
         if (res.ok) {
-          const data = await res.json();
-          if (data.authenticated) {
+            const data = await res.json();
+            console.log(data);
+            if (data.loggedIn) {
             setAuthenticated(true);
           } else {
             router.push("/login");

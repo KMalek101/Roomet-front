@@ -4,9 +4,12 @@ import ViewBlocks from "@/components/blocks/ViewBlocks";
 import Header from "@/components/common/header/Header";
 import Sidebar from "@/components/common/side bar/Sidebar";
 import { useState } from "react";
+import useAuth from "@/utils/useAuth";
 
 export default function page() {
   const [showAddBlock, setShowAddBlock] = useState(false); 
+  const {loading, authenticated} = useAuth();
+  console.log(authenticated)
   
   return (
     <div className="h-screen w-screen overflow-hidden">
