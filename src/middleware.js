@@ -6,19 +6,23 @@ export function middleware(request) {
 
   // Skip middleware for static assets, API, favicon, and public files
   if (
-    pathname.startsWith('/_next/') || // Next.js internal files
-    pathname.startsWith('/api/') || // API routes
-    pathname.startsWith('/favicon.ico') || // Favicon
-    pathname.startsWith('/images/') || // Images directory
-    pathname.startsWith('/public/') || // Public directory
-    /\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/.test(pathname) // Image file extensions
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/favicon.ico') ||
+    pathname.startsWith('/images/') ||
+    pathname.startsWith('/public/') ||
+    /\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/.test(pathname)
   ) {
     return NextResponse.next()
   }
 
-  const publicPaths = ['/login', '/signup']
+  // Check if path is public
+  const isPublicPath =
+    pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname.startsWith('/verification') // Includes all /verification/[id] paths
 
-  if (!sessionCookie && !publicPaths.includes(pathname)) {
+  if (!sessionCookie && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
