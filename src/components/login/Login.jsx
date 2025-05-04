@@ -56,7 +56,7 @@ export function Login() {
                 password: formData.password,
             };
             await login(dataToSend);
-            router.push("/dashboard");
+            router.push("/blocks");
         } catch (error) {
             // Handle specific error messages from your API
             if (error.message.includes("Invalid credentials")) {
@@ -116,7 +116,7 @@ export function Login() {
             {errors.general && (
                 <p className="text-red-500 text-sm">{errors.general}</p>
             )}
-            
+
             <button
                 type="submit"
                 disabled={loading}
