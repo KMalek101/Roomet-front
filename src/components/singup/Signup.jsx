@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { signUp } from "@/utils/auth";
 
 export function SignUp() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -11,6 +13,7 @@ export function SignUp() {
     });
     const [agreed, setAgreed] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -39,9 +42,11 @@ export function SignUp() {
                 password: formData.password,
             };
             await signUp(dataToSend);
-            alert("Signed up successfully!");
+            setShowSuccess(true);
+            // Clear form on success
+            setAgreed(false);
         } catch (error) {
-            alert("An error occurred during sign-up... Please try again.");
+            alert(error.message || "An error occurred during sign-up. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -50,8 +55,30 @@ export function SignUp() {
     return (
         <form 
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 shadow-xl p-4 rounded-xl z-20 pl-10 bg-[var(--w-color)]"
+            className="flex flex-col gap-4 shadow-xl p-4 rounded-xl z-20 pl-10 bg-[var(--w-color)] relative"
         >
+            {showSuccess && (
+                <div className="absolute inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center p-6 rounded-xl z-10">
+                    <div className="bg-green-100 p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 className="text-2xl font-bold text-center mb-2">Verification Email Sent!</h2>
+                    <p className="text-center mb-6">
+                        We've sent a verification link to <span className="font-semibold">{formData.email}</span>.
+                        Please check your inbox and click the link to complete your registration.
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => setShowSuccess(false)}
+                        className="bg-[var(--green-color)] text-white px-6 py-2 rounded-md hover:bg-green-600 transition cursor-pointer"
+                    >
+                        Back to Sign Up
+                    </button>
+                </div>
+            )}
+
             <h1 className="font-bold text-3xl pb-2.5">Sign Up</h1>
 
             <div className="flex gap-4">
@@ -147,13 +174,13 @@ export function SignUp() {
             <button
                 type="submit"
                 disabled={loading}
-                className="bg-[var(--green-color)] rounded-md py-2 text-[var(--w-color)] w-min px-16 text-nowrap mt-2 cursor-pointer"
+                className="bg-[var(--green-color)] rounded-md py-2 text-[var(--w-color)] w-min px-16 text-nowrap mt-2 cursor-pointer disabled:opacity-50"
             >
                 {loading ? "Signing Up..." : "Sign Up"}
             </button>
 
             <p className="text-[12px] mt-2">
-                Already have an account? <a className="text-[var(--green-color)] underline" href="#">Sign In</a>
+                Already have an account? <a className="text-[var(--green-color)] underline" href="/login">Sign In</a>
             </p>
         </form>
     );
