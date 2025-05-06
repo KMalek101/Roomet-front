@@ -19,6 +19,7 @@ export default function Sidebar() {
     { label: "Log out" },
     { label: "Dashboard" },
     { label: "Support" },
+    { label: "Students" },
   ];
 
   const getRouteFromLabel = (label) =>
