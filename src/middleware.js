@@ -20,7 +20,8 @@ export function middleware(request) {
   const isPublicPath =
     pathname === '/login' ||
     pathname === '/signup' ||
-    pathname.startsWith('/verification') // Includes all /verification/[id] paths
+    pathname.startsWith('/') ||
+    pathname.startsWith('/verification')
 
   if (!sessionCookie && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))

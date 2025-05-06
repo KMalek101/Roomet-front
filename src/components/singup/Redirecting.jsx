@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 export default function Redirecting() {
     const router = useRouter();
     const pathname = usePathname();
-    const [status, setStatus] = useState("loading"); // 'loading', 'success', 'error', 'verifying'
+    const [status, setStatus] = useState("loading"); 
     const [retryCount, setRetryCount] = useState(0);
     const [countdown, setCountdown] = useState(5);
 

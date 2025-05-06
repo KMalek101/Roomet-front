@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import ReportGridCard from "./ReportGridCard";
 import ReportListCard from "./ReportListCard";
+import { useRouter } from "next/navigation";
 
 export default function ViewReports() {
   const [selection, setSelection] = useState("grid");
@@ -14,6 +15,7 @@ export default function ViewReports() {
     urgency: null,
   });
 
+  const router = useRouter(null);
   const filterRef = useRef(null); 
   const optionsViewAs = [
     {
@@ -75,6 +77,10 @@ export default function ViewReports() {
       }
     });
   };
+
+  const handleClick = (report) => {
+    router.push(`/reports/${report.status + report.date}`);
+  }
 
   const CustomDropdown = () => {
     return (
@@ -320,15 +326,19 @@ export default function ViewReports() {
       </div>
       {selection === "list" ? (
         <div className="flex flex-col gap-4">
-            {sortedReports.map((report, index) => {
-              return <ReportListCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block}/>
-            })}
+            {sortedReports.map((report, index) => (
+                <div onClick={() => handleClick(report)}>
+                  <ReportListCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block}/>
+                </div>
+            ))}
         </div>
       ) : (
       <div className="flex gap-6.5 flex-wrap">
-            {sortedReports.map((report, index) => {
-              return <ReportGridCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block}/>
-            })}
+            {sortedReports.map((report, index) => (
+                <div onClick={() => handleClick(report)}>
+                  <ReportGridCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block}/>
+                </div>
+            ))}
       </div>
       )}
     </div>

@@ -4,7 +4,6 @@ import ViewBlocks from "@/components/blocks/ViewBlocks";
 import Header from "@/components/common/header/Header";
 import Sidebar from "@/components/common/side bar/Sidebar";
 import { useState } from "react";
-
 export default function page() {
   const [showAddBlock, setShowAddBlock] = useState(false); 
   return (

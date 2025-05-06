@@ -185,8 +185,8 @@ export default function AddRoom({ setShowAddRoom, blocks }) {
             </div>
 
             <div className="flex gap-1.5 ml-auto pt-2 pb-1 px-2">
-                <button onClick={() => setShowAddBlock(false)} className="bg-[var(--w-color)] p-2 font-medium rounded-md cursor-pointer">Cancel</button>
-                <button onClick={() => setShowAddBlock(false)} className="bg-[var(--green-color)] p-2 font-medium text-[var(--w-color)] rounded-md cursor-pointer">Create Room</button>
+                <button onClick={() => setShowAddRoom(false)} className="bg-[var(--w-color)] p-2 font-medium rounded-md cursor-pointer">Cancel</button>
+                <button onClick={() => setShowAddRoom(false)} className="bg-[var(--green-color)] p-2 font-medium text-[var(--w-color)] rounded-md cursor-pointer">Create Room</button>
             </div>
         </div>
     );
