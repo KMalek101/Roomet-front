@@ -24,7 +24,6 @@ export default function Student() {
     const [showRoomDropdown, setShowRoomDropdown] = useState(false);
     const [blockSearch, setBlockSearch] = useState("");
     const [showBlockDropdown, setShowBlockDropdown] = useState(false);
-    const dropdownRef = useRef(null);
     const roomDropdownRef = useRef(null);
     const blockDropdownRef = useRef(null);
     
@@ -118,6 +117,12 @@ export default function Student() {
         setIsDirty(false);
     };
 
+    const urgencyColor = {
+        Critical: "font-medium text-red-600", 
+        High: "font-medium text-red-500",
+        Medium: "text-green-600",
+      };
+    
     return (
         <div className="bg-[var(--secondary-color)] h-full w-full rounded-md">
             <h2 className="flex justify-center items-center font-bold text-3xl py-3">
@@ -353,7 +358,31 @@ export default function Student() {
                         </div>
                     </div>
                 </div>
+                
             </div>
+
+            <div className="flex pt-6 justify-center gap-32 w-full items-stretch px-24">
+                <div className="flex flex-col bg-white brightness-95 rounded-md py-4 px-6 text-lg flex-1">
+                    <h2 className="flex justify-center pb-4 text-lg font-medium">Reports</h2>
+                    <div className="border pt-2 px-2 rounded-2xl border-gray-300">
+                        <div className="py-2">
+                            <div className="flex justify-between">
+                                <p className="py-2 pl-4 cursor-pointer hover:bg-gray-100">Report 1 - 12/05/2023</p>
+                                <p className="py-2 pl-4 cursor-pointer hover:bg-gray-100">Closed</p>
+                            </div>
+                            <div className="flex justify-between">
+                                <p className="py-2 pl-4 cursor-pointer hover:bg-gray-100">Report 2 - 20/05/2023</p>
+                                <p className="py-2 pl-4 cursor-pointer hover:bg-gray-100">Closed</p>
+                            </div>
+                            <div className="flex justify-between hover:bg-gray-100">
+                                <p className="py-2 pl-4 cursor-pointer hover:bg-gray-100">Report 3 - 01/06/2023</p>
+                                <p className={urgencyColor["High"]}>High urgency</p>
+                                <p className="py-2 pl-4 cursor-pointer hover:bg-gray-100">Pending</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
 
             <div className="flex justify-center pt-6 pb-4">
                 {editMode ? (
@@ -375,7 +404,7 @@ export default function Student() {
                 ) : (
                     <button 
                         onClick={() => setEditMode(true)}
-                        className="bg-[var(--green-color)] text-white px-6 py-2 rounded-md"
+                        className="bg-[var(--green-color)] text-white px-6 py-2 rounded-md cursor-pointer"
                     >
                         Edit Information
                     </button>
