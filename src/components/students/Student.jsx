@@ -339,7 +339,6 @@ export default function Student() {
                             {Object.entries(studentData.supplies).map(([item, count]) => (
                                 <div key={item} className="flex flex-col items-center">
                                     <div className="capitalize">{item}</div>
-                                    {/* Keep your existing SVG here */}
                                     {editMode ? (
                                         <input
                                             type="number"

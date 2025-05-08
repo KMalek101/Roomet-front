@@ -20,7 +20,6 @@ export function middleware(request) {
   const isPublicPath =
     pathname === '/login' ||
     pathname === '/signup' ||
-    pathname.startsWith('/') ||
     pathname.startsWith('/verification')
 
   if (!sessionCookie && !isPublicPath) {
