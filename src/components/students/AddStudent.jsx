@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import 'react-phone-number-input/style.css'
+import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
 
 export default function AddStudent({ setShowAddStudent }) {
     const [roomSearch, setRoomSearch] = useState("");
@@ -8,6 +10,66 @@ export default function AddStudent({ setShowAddStudent }) {
     const dropdownRef = useRef(null);
     const availableRooms = ["H309", "H310", "H311", "H312", "H313", "H314", "H315", "H316", "H317"];
     
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileUpload = (file) => {
+    if (!file) return;
+    
+    // Validate file type
+    const validTypes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    if (!validTypes.includes(file.type) && !file.name.match(/\.(csv|xlsx|xls)$/)) {
+        alert('Please upload a valid CSV or Excel file');
+        return;
+    }
+
+    // Validate file size (e.g., 5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('File size should be less than 5MB');
+        return;
+    }
+
+    setSelectedFile(file);
+    
+    // Optional: Parse the file immediately
+    parseFile(file);
+    };
+
+    const parseFile = (file) => {
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+        try {
+        const content = e.target.result;
+        
+        if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+            // Parse CSV
+            const results = Papa.parse(content, {
+            header: true,
+            skipEmptyLines: true
+            });
+            console.log('Parsed CSV data:', results.data);
+            // Process student data here
+        } else {
+            // Parse Excel
+            const workbook = XLSX.read(content, { type: 'binary' });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+            console.log('Parsed Excel data:', jsonData);
+            // Process student data here
+        }
+        } catch (error) {
+        console.error('Error parsing file:', error);
+        alert('Error parsing file. Please check the format.');
+        }
+    };
+    
+    if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+        reader.readAsText(file);
+    } else {
+        reader.readAsBinaryString(file);
+    }
+    };
+
     // Form state
     const [formData, setFormData] = useState({
         firstName: "",
@@ -301,15 +363,42 @@ export default function AddStudent({ setShowAddStudent }) {
             )}
             
             <label className={`flex items-center gap-2 cursor-pointer p-5 ${mode === "automate" ? "bg-[var(--g-color-opacity-v2)]" : ""}`}>
-                <input
-                    type="radio"
-                    name="mode"
-                    value="automate"
-                    checked={mode === "automate"}
-                    onChange={() => setMode("automate")}
-                    className="h-3 w-3 text-[var(--green-color)] focus:ring-[var(--green-color)]"
-                />
+            <input
+                type="radio"
+                name="mode"
+                value="automate"
+                checked={mode === "automate"}
+                onChange={() => setMode("automate")}
+                className="h-3 w-3 text-[var(--green-color)] focus:ring-[var(--green-color)]"
+            />
+            <div className="flex flex-col">
                 <span className="text-lg font-medium">Bulk Import</span>
+                {mode === "automate" && (
+                <div className="mt-2">
+                    <label className="flex flex-col items-center px-4 py-2 bg-white rounded-md border border-[var(--g-color)] cursor-pointer hover:bg-gray-50">
+                    <span className="text-sm text-[var(--g-color)]">Upload CSV/Excel File</span>
+                    <input
+                        type="file"
+                        accept=".csv,.xlsx,.xls"
+                        onChange={(e) => handleFileUpload(e.target.files[0])}
+                        className="hidden"
+                    />
+                    <span className="text-xs text-gray-500 mt-1">(Format: Name, Email, ID, etc.)</span>
+                    </label>
+                    {selectedFile && (
+                    <div className="mt-2 text-sm text-[var(--green-color)] flex items-center gap-1">
+                        {selectedFile.name}
+                        <button 
+                        onClick={() => setSelectedFile(null)}
+                        className="text-[var(--red-color)] ml-2"
+                        >
+                        Remove
+                        </button>
+                    </div>
+                    )}
+                </div>
+                )}
+            </div>
             </label>
 
             <div className="flex gap-1.5 ml-auto pt-2 pb-1 px-2">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import BlockGridCard from "./BlockGridCard";
 import BlockListCard from "./BlockListCard";
+import { getBlocks } from "@/utils/blocks";
 
 export default function ViewBlocks() {
   const [selection, setSelection] = useState("grid");
@@ -243,6 +244,21 @@ export default function ViewBlocks() {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
+  }, []);
+
+  const [blocksData, setBlocksData] = useState({});
+  useEffect(() => {
+    const fetchBlocks = async () => {
+      try {
+        const data = await getBlocks();
+        console.log(data);
+        setBlocksData(data);
+      } catch (err) {
+        console.error("Failed to fetch blocks:", err);
+      }
+    };
+
+    fetchBlocks();
   }, []);
 
   const blockData = [
