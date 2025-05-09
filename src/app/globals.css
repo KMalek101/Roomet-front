@@ -37,6 +37,8 @@
   --main-color : #CCCCCC;
   --secondary-color: #DDDDDD;
   --black-color: black;
+  --love-color: #333;
+  --footer-color: #4e4e4e;
   --w-color: #fff;
   --o-color: #DC9908;
   --r-color: red;
@@ -64,6 +66,7 @@ body{
   padding: 0;
   background-color: var(--main-color);
 }
+
 @theme{
   --spacing: 4px;
 }
