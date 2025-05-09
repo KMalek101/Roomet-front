@@ -246,104 +246,109 @@ export default function ViewBlocks() {
     };
   }, []);
 
-  const [blocksData, setBlocksData] = useState({});
-  useEffect(() => {
-    const fetchBlocks = async () => {
-      try {
-        const data = await getBlocks();
-        console.log(data);
-        setBlocksData(data);
-      } catch (err) {
-        console.error("Failed to fetch blocks:", err);
-      }
-    };
+  const [blocks, setBlocks] = useState([]);
+const [isLoading, setIsLoading] = useState(true);
+const [error, setError] = useState(null);
 
-    fetchBlocks();
-  }, []);
-
-  const blockData = [
-    { name: "J", students: 1, maxStudents: 2000, reports: 1 },
-    { name: "A", students: 5, maxStudents: 2000, reports: 2 },
-    { name: "B", students: 12, maxStudents: 2000, reports: 5 },
-    { name: "C", students: 0, maxStudents: 2000, reports: 0 },
-    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
-    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
-    { name: "C", students: 0, maxStudents: 2000, reports: 0 },
-    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
-    { name: "D", students: 8, maxStudents: 2000, reports: 7 },
-    { name: "E", students: 3, maxStudents: 2000, reports: 1 },
-    { name: "F", students: 2, maxStudents: 2000, reports: 3 },
-    { name: "G", students: 7, maxStudents: 2000, reports: 2 },
-    { name: "H", students: 2000, maxStudents: 2000, reports: 0 },
-    { name: "I", students: 6, maxStudents: 2000, reports: 4 },
-  ];
-  
-  const filteredBlocks = blockData.filter((block) => {
-    if (filters.length === 0 || filters.includes("all")) return true;
-  
-    const conditions = {
-      active: block.students < block.maxStudents,
-      completed: block.students == block.maxStudents,
-      noreports: block.reports === 0,
-      empty: block.students == 0,
-    };
-  
-    return filters.some((filter) => conditions[filter]);
-  });
-  
-  const sortedBlocks = filteredBlocks.sort((a, b) => {
-    const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
-    const direction = sortDirection[column];
-  
-    if (!column || !direction) return 0;
-  
-    // Calculate availability as a computed value based on maxStudents and students
-    const availabilityA = ((a.maxStudents - a.students) * 100) / a.maxStudents;
-    const availabilityB = ((b.maxStudents - b.students) * 100) / b.maxStudents;
-  
-    // Handle sorting based on availability or other columns
-    let valA = column === "availability" ? availabilityA : a[column];
-    let valB = column === "availability" ? availabilityB : b[column];
-  
-    if (typeof valA === "string") {
-      valA = valA.toLowerCase();
-      valB = valB.toLowerCase();
+useEffect(() => {
+  const fetchBlocksData = async () => {
+    try {
+      const fetchedData = await getBlocks();
+      setBlocks(fetchedData);
+    } catch (err) {
+      setError("Failed to fetch blocks.");
+      console.error("Fetch error:", err);
+    } finally {
+      setIsLoading(false);
     }
-  
-    if (valA < valB) return direction === "asc" ? -1 : 1;
-    if (valA > valB) return direction === "asc" ? 1 : -1;
-    return 0;
-  });
-  
-  
-  return (
-    <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
-      <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
-        <label htmlFor="viewMode" className="font-medium">
-          View blocks as
-        </label>
-        <CustomDropdown />
-        <p className="font-medium pl-12">Filter blocks as</p>
-        <Filter />
-      </div>
+  };
 
-      <Header sortDirection={sortDirection} setSortDirection={setSortDirection} />
-      <div className="h-[1px] w-full p-2">
-        <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
-      </div>
-      {selection === "list" ? (
-        <div className="flex flex-col gap-4">
-            {filteredBlocks.map((block, index) => {
-              return <BlockListCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} availability={(block.maxStudents - block.students) * 100 / block.maxStudents} reports={block.reports} />
-            })}
-        </div>
-      ) : (
-      <div className="flex gap-6.5 flex-wrap">
-        {filteredBlocks.map((block, index) => {
-          return <BlockGridCard key={index} name={block.name} students={block.students} maxStudents={block.maxStudents} availability={(block.maxStudents - block.students) * 100 / block.maxStudents} reports={block.reports} />
-        })}
-      </div>
-      )}
+  fetchBlocksData();
+}, []);
+
+const filteredBlocks = blocks.filter((block) => {
+  if (filters.length === 0 || filters.includes("all")) return true;
+
+  const conditions = {
+    active: block.totalStudents < block.maxStudents,
+    completed: block.totalStudents === block.maxStudents,
+    noreports: block.numberOfReports === 0,
+    empty: block.totalStudents === 0,
+  };
+
+  return filters.some((filter) => conditions[filter]);
+});
+
+const sortedBlocks = [...filteredBlocks].sort((a, b) => {
+  const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
+  const direction = sortDirection[column];
+
+  if (!column || !direction) return 0;
+
+  const availabilityA = ((a.maxStudents - a.totalStudents) * 100) / a.maxStudents;
+  const availabilityB = ((b.maxStudents - b.totalStudents) * 100) / b.maxStudents;
+
+  let valA = column === "availability" ? availabilityA : a[column];
+  let valB = column === "availability" ? availabilityB : b[column];
+
+  if (typeof valA === "string") {
+    valA = valA.toLowerCase();
+    valB = valB.toLowerCase();
+  }
+
+  if (valA < valB) return direction === "asc" ? -1 : 1;
+  if (valA > valB) return direction === "asc" ? 1 : -1;
+  return 0;
+});
+
+return (
+  <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
+    <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
+      <label htmlFor="viewMode" className="font-medium">View blocks as</label>
+      <CustomDropdown />
+      <p className="font-medium pl-12">Filter blocks as</p>
+      <Filter />
     </div>
-  );
+
+    <Header sortDirection={sortDirection} setSortDirection={setSortDirection} />
+    
+    <div className="h-[1px] w-full p-2">
+      <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
+    </div>
+
+    {isLoading ? (
+      <p className="text-center text-gray-500">Loading blocks...</p>
+    ) : error ? (
+      <p className="text-center text-red-500">{error}</p>
+    ) : sortedBlocks.length === 0 ? (
+      <p className="text-center text-gray-400">No blocks match your filters.</p>
+    ) : selection === "list" ? (
+      <div className="flex flex-col gap-4">
+        {sortedBlocks.map((block, index) => (
+          <BlockListCard
+            key={index}
+            name={block.name}
+            students={block.totalStudents}
+            maxStudents={block.maxStudents}
+            availability={(block.maxStudents - block.totalStudents) * 100 / block.maxStudents}
+            reports={block.numberOfReports}
+          />
+        ))}
+      </div>
+    ) : (
+      <div className="flex gap-6.5 flex-wrap">
+        {sortedBlocks.map((block, index) => (
+          <BlockGridCard
+            key={index}
+            name={block.name}
+            students={block.totalStudents}
+            maxStudents={block.maxStudents}
+            availability={(block.maxStudents - block.totalStudents) * 100 / block.maxStudents}
+            reports={block.numberOfReports}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+);
 }
