@@ -9,10 +9,10 @@ const Header = () => {
             
             <div className="flex justify-center items-center gap-24">
             <button className="cursor-pointer text-[var(--green-color)] font-medium relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bottom-0 after:left-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full">
-                Login
+                <a href="/login">Login</a>
             </button>
                 <button className="p-2 px-8 text-[var(--black-color)] rounded-md border-[var(--green-color)] border cursor-pointer hover:bg-[var(--green-color)] hover:text-[var(--w-color)] transition-colors duration-150">
-                    Get started
+                    <a href="/signup">Get started</a>
                 </button>
             </div>
         </div>
@@ -38,7 +38,7 @@ const BackgroundImage = () => {
                     free to design, manage, and make your own.
                 </h4>
                 <button className="w-fit bg-[var(--green-color)] p-2.5 px-10 text-[var(--w-color)] rounded-md cursor-pointer transition-colors duration-150">
-                    Get started
+                    <a href="/signup">Get started</a>
                 </button>
             </div>
             
@@ -77,7 +77,7 @@ const Body = () => {
                     It's free. It's flexible. It's yours to build.
                 </p>
                 <button className="bg-[var(--green-color)] px-10 py-3 text-[var(--w-color)] rounded-md text-lg font-medium cursor-pointer transition-colors duration-150 hover:bg-opacity-90">
-                    Get Started Now
+                    <a href="/signup">Get Started Now</a>
                 </button>
             </section>
 
