@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import StudentListCard from "./StudentListCard";
 import StudentGridCard from "./StudentGridCard";
 import { useRouter } from "next/navigation";
+import { getStudents } from "@/utils/student";
 
 export default function ViewStudents() {
   const [selection, setSelection] = useState("grid");
@@ -247,36 +248,31 @@ export default function ViewStudents() {
       </div>
     );
   };
-
-  const studentData = [
-    { id: 1, firstName: "Mohamed", lastName: "Kaouche", room: "H309", block: "H", reports: 3 },
-    { id: 2, firstName: "Walid", lastName: "Kacha", room: "H309", block: "H", reports: 2 },
-    { id: 3, firstName: "Zakaria", lastName: "Abderrahime", room: "H309", block: "H", reports: 0 },
-    { id: 4, firstName: "Mouad", lastName: "Sayedahmed", room: "H309", block: "H", reports: 1 },
-    { id: 5, firstName: "Abdelhak", lastName: "Bouzar", room: "H310", block: "H", reports: 5 },
-    { id: 6, firstName: "Nassim", lastName: "Zitouni", room: "H310", block: "H", reports: 0 },
-    { id: 7, firstName: "Yacine", lastName: "Belhadj", room: "H311", block: "H", reports: 1 },
-    { id: 8, firstName: "Farouk", lastName: "Tebib", room: "H311", block: "H", reports: 2 },
-    { id: 9, firstName: "Djamel", lastName: "Lounis", room: "H311", block: "H", reports: 0 },
-    { id: 10, firstName: "Sofiane", lastName: "Mebarki", room: "H312", block: "H", reports: 4 },
-    { id: 11, firstName: "Rafik", lastName: "Benhammou", room: "H312", block: "H", reports: 1 },
-    { id: 12, firstName: "Lyes", lastName: "Khider", room: "H312", block: "H", reports: 0 },
-    { id: 13, firstName: "Ilyes", lastName: "Hadjar", room: "H313", block: "H", reports: 0 },
-    { id: 14, firstName: "Tarek", lastName: "Benali", room: "H313", block: "H", reports: 3 },
-    { id: 15, firstName: "Chakib", lastName: "Bourahla", room: "H314", block: "H", reports: 0 },
-    { id: 16, firstName: "Karim", lastName: "Zouaoui", room: "H314", block: "H", reports: 2 },
-    { id: 17, firstName: "Amine", lastName: "Toumi", room: "H315", block: "H", reports: 1 },
-    { id: 18, firstName: "Elhadj", lastName: "Benmeriem", room: "H315", block: "H", reports: 0 },
-    { id: 19, firstName: "Mohamed", lastName: "Hassani", room: "H315", block: "H", reports: 0 },
-    { id: 20, firstName: "Bilal", lastName: "Daraji", room: "H316", block: "H", reports: 0 },
-    { id: 21, firstName: "Sidali", lastName: "Nekkache", room: "H316", block: "H", reports: 1 },
-    { id: 22, firstName: "Zineddine", lastName: "Mansouri", room: "H317", block: "H", reports: 3 },
-    { id: 23, firstName: "Nassim", lastName: "Benameur", room: "H317", block: "H", reports: 2 },
-    { id: 24, firstName: "Oussama", lastName: "Bekkouche", room: "H317", block: "H", reports: 1 },
-  ];
+  
+  const [studentError, setStudentError] = useState("");
+  const [students, setStudents] = useState([]);
+  const [isStudentsLoading, setIsStudentsLoading] = useState(true);
+  const [studentsError, setStudentsError] = useState("");
+  
+  useEffect(() => {
+    const fetchStudentsData = async () => {
+      try {
+        const data = await getStudents();
+        setStudents(data.students);
+        console.log(data);
+      } catch (err) {
+        setStudentsError("Failed to fetch students.");
+        console.error("Students fetch error:", err);
+      } finally {
+        setIsStudentsLoading(false);
+      }
+    };
+  
+    fetchStudentsData();
+  }, []);
 
   // Filter students based on selected filters
-  const filteredStudents = studentData.filter((student) => {
+  const filteredStudents = students.filter((student) => {
     if (filters.length === 0 || filters.includes("all")) return true;
   
     const conditions = {
@@ -288,21 +284,19 @@ export default function ViewStudents() {
   
     return filters.some((filter) => conditions[filter]);
   });
-
+  
   const sortedStudents = filteredStudents.sort((a, b) => {
     const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
     const direction = sortDirection[column];
   
     if (!column || !direction) return 0;
   
-    let valA, valB;
-    
-    if (column === "firstName" || column === "lastName" || column === "room" || column === "block") {
-      valA = a[column].toLowerCase();
-      valB = b[column].toLowerCase();
-    } else {
-      valA = a[column];
-      valB = b[column];
+    let valA = a[column];
+    let valB = b[column];
+  
+    if (typeof valA === "string") {
+      valA = valA.toLowerCase();
+      valB = valB.toLowerCase();
     }
   
     if (valA < valB) return direction === "asc" ? -1 : 1;
@@ -324,15 +318,21 @@ export default function ViewStudents() {
         <p className="font-medium pl-12">Filter students as</p>
         <Filter />
       </div>
-
+  
       <Header />
       <div className="h-[1px] w-full p-2">
         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
       </div>
-
-      {selection === "list" ? (
+  
+      {isStudentsLoading ? (
+        <p className="text-center text-gray-500">Loading students...</p>
+      ) : studentsError ? (
+        <p className="text-center text-red-500">{studentsError}</p>
+      ) : sortedStudents.length === 0 ? (
+        <p className="text-center text-gray-400">No students match your filters.</p>
+      ) : selection === "list" ? (
         <div className="flex flex-col gap-4">
-          {sortedStudents.map((student, index) => (
+          {sortedStudents.map((student) => (
             <div onClick={() => handleStudentClick(student)} key={student.id}>
               <StudentListCard
                 firstName={student.firstName}
@@ -346,7 +346,7 @@ export default function ViewStudents() {
         </div>
       ) : (
         <div className="flex gap-6.5 flex-wrap">
-          {sortedStudents.map((student, index) => (
+          {sortedStudents.map((student) => (
             <div onClick={() => handleStudentClick(student)} key={student.id}>
               <StudentGridCard
                 firstName={student.firstName}
@@ -360,5 +360,5 @@ export default function ViewStudents() {
         </div>
       )}
     </div>
-  );
+  );  
 }

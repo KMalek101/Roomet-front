@@ -398,7 +398,7 @@ export default function AddStudent({ setShowAddStudent }) {
                     </div>
                 </div>
             )}
-            
+            {/* Bulk     */}
             <label className={`flex items-center gap-2 cursor-pointer p-5 ${mode === "automate" ? "bg-[var(--g-color-opacity-v2)]" : ""}`}>
             <input
                 type="radio"
@@ -413,14 +413,14 @@ export default function AddStudent({ setShowAddStudent }) {
                 {mode === "automate" && (
                 <div className="mt-2">
                     <label className="flex flex-col items-center px-4 py-2 bg-white rounded-md border border-[var(--g-color)] cursor-pointer hover:bg-gray-50">
-                    <span className="text-sm text-[var(--g-color)]">Upload CSV/Excel File</span>
+                    <span className="text-sm text-[var(--g-color)]">Upload Excel File</span>
                     <input
                         type="file"
                         accept=".csv,.xlsx,.xls"
                         onChange={(e) => handleFileUpload(e.target.files[0])}
                         className="hidden"
                     />
-                    <span className="text-xs text-gray-500 mt-1">(Format: Name, Email, ID, etc.)</span>
+                    <span className="text-xs text-gray-500 mt-1">(Format: firstName, lastName, <br /> studentId, rommId, phone.)</span>
                     </label>
                     {selectedFile && (
                     <div className="mt-2 text-sm text-[var(--green-color)] flex items-center gap-1">
