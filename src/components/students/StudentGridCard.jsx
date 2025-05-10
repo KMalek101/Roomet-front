@@ -4,13 +4,7 @@ export default function StudentGridCard({ firstName, lastName, room, block, repo
             <p className="font-medium">{firstName} <br /> {lastName}</p>
             <div className="flex flex-col justify-center items-center mt-aut">
                 <p>{room || "No room yet"}</p>
-                {room && (
-                    typeof block === "string" ? (
-                        <p className="-mt-1">{block}</p>
-                    ) : (
-                        <p className="-mt-1">Block {block}</p>
-                    )
-                )}
+                {room && <p className="-mt-1">Block {block}</p>}
             </div>
             <p className={`mt-auto ${reports > 0 ? "text-[var(--r-color)]" : "text-[var(--green-color)]"}`}>
                 {reports} {reports === 1 ? "report" : "reports"}
