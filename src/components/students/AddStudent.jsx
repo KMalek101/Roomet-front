@@ -4,6 +4,7 @@ import 'react-phone-number-input/style.css'
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { addStudent } from "@/utils/student";
+import { uploadBulkStudents } from "@/utils/student";
 
 export default function AddStudent({ setShowAddStudent }) {
     const [roomSearch, setRoomSearch] = useState("");
@@ -162,8 +163,25 @@ export default function AddStudent({ setShowAddStudent }) {
     };
 
     // here is the actual student post 
+    const handleBulkImport = async () => {
+        if (!selectedFile) return;
+    
+        try {
+            const result = await uploadBulkStudents(selectedFile);
+            console.log("Bulk upload result:", result);
+            console.log("Bulk student upload successful!");
+            setSelectedFile(null);
+        } catch (error) {
+            console.error("Bulk upload failed:", error);
+            console.error(error.message || "Bulk upload failed!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleSubmit = async () => {
         if (!validateForm()) {
+            setLoading(false);
             return;
         }
     
@@ -178,18 +196,19 @@ export default function AddStudent({ setShowAddStudent }) {
             };
     
             await addStudent(studentData);
-            
+            console.log("Student added successfully!");
             setShowAddStudent(false);
-            
-            alert('Student added successfully!');
-            
+            console.log("Student added successfully!");
         } catch (error) {
-            console.error('Error submitting form:', error);
-            alert('Failed to add student. Please try again.');
+            console.error("Error submitting form:", error);
+            console.error("Failed to add student. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
-
+        
     const [mode, setMode] = useState("customizable");
+    const [loading, setLoading] = useState(false);
 
     return (
         <div className="flex flex-col bg-[var(--secondary-color)] rounded-md flex-1 w-[1200px]">
@@ -422,16 +441,18 @@ export default function AddStudent({ setShowAddStudent }) {
             {/* validate button */}
             <div className="flex gap-1.5 ml-auto pt-2 pb-1 px-2">
                 <button 
-                    onClick={() => setShowAddStudent(false)} 
-                    className="bg-[var(--w-color)] p-2 font-medium rounded-md cursor-pointer"
+                    onClick={() => {
+                        if (!loading) {
+                            setLoading(true);
+                            mode === "customizable" ? handleSubmit() : handleBulkImport();
+                        }
+                    }}
+                    className={`bg-[var(--green-color)] p-2 font-medium text-[var(--w-color)] rounded-md cursor-pointer ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    disabled={loading}
                 >
-                    Cancel
-                </button>
-                <button 
-                    onClick={mode === "customizable" ? handleSubmit : handleBulkImport} 
-                    className="bg-[var(--green-color)] p-2 font-medium text-[var(--w-color)] rounded-md cursor-pointer"
-                >
-                    {mode === "customizable" ? "Add Student" : "Import Students"}
+                    {loading
+                        ? (mode === "customizable" ? "Adding..." : "Importing...")
+                        : (mode === "customizable" ? "Add Student" : "Import Students")}
                 </button>
             </div>
         </div>

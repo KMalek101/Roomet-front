@@ -1,30 +1,36 @@
 import axios from "axios";
 const API_BASE_URL = "http://localhost:5000";
 
-export async function initializeBlocks(data) {
-  // First verify session
-  const sessionCheck = await fetch('http://localhost:5000/api/auth/is-logged-in', {
+export async function uploadBulkStudents(file) {
+  const sessionCheck = await fetch(`${API_BASE_URL}/api/auth/is-logged-in`, {
     credentials: 'include'
-  });  
+  });
 
-  // if (!sessionCheck.data.loggedIn) {
-  //   throw new Error("Unauthorized - Please login again");
-  // }
+  const sessionData = await sessionCheck.json();
 
-  // Proceed with the blocks initialization
+//   if (!sessionData.loggedIn) {
+//     throw new Error("Unauthorized - Please login again");
+//   }
+
+  // Step 2: Prepare FormData for file upload
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // Step 3: Make authenticated POST request to /bulk
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/blocks/initialize`, data, {
+    const response = await axios.post(`${API_BASE_URL}/api/assignments/bulk`, formData, {
       withCredentials: true,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'multipart/form-data'
       }
     });
 
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to initialize blocks');
+    throw new Error(error.response?.data?.message || 'Bulk upload failed');
   }
 }
+
 
 export async function addStudent(data) {
   // First verify session
