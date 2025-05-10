@@ -3,6 +3,7 @@ import PhoneInputWithCountrySelect from "react-phone-number-input";
 import 'react-phone-number-input/style.css'
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
+import { addStudent } from "@/utils/student";
 
 export default function AddStudent({ setShowAddStudent }) {
     const [roomSearch, setRoomSearch] = useState("");
@@ -160,15 +161,31 @@ export default function AddStudent({ setShowAddStudent }) {
         return !Object.values(newErrors).some(error => error);
     };
 
-    const handleSubmit = () => {
-        if (validateForm()) {
-            // Form is valid, proceed with submission
-            console.log("Form submitted:", formData);
+    // here is the actual student post 
+    const handleSubmit = async () => {
+        if (!validateForm()) {
+            return;
+        }
+    
+        try {
+            const studentData = {
+                firstName: formData.firstName.trim(),
+                lastName: formData.lastName.trim(),
+                email: formData.email.trim(),
+                studentId: formData.studentId.trim(),
+                phone: formData.phone,
+                roomSelection: formData.roomSelection
+            };
+    
+            await addStudent(studentData);
+            
             setShowAddStudent(false);
-            // Here you would typically send the data to your backend
-        } else {
-            // Form is invalid, errors are already set
-            console.log("Form validation failed");
+            
+            alert('Student added successfully!');
+            
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Failed to add student. Please try again.');
         }
     };
 
@@ -187,7 +204,8 @@ export default function AddStudent({ setShowAddStudent }) {
                 />
                 <span className="text-lg font-medium">Manual Entry</span>
             </label>
-            
+
+            {/* customizable mode */}
             {mode === "customizable" && (
                 <div className="flex flex-col gap-4 bg-[var(--secondary-color)] p-6 py-2 rounded-md flex-1">            
                     <label className="flex">
@@ -401,6 +419,7 @@ export default function AddStudent({ setShowAddStudent }) {
             </div>
             </label>
 
+            {/* validate button */}
             <div className="flex gap-1.5 ml-auto pt-2 pb-1 px-2">
                 <button 
                     onClick={() => setShowAddStudent(false)} 
@@ -409,10 +428,10 @@ export default function AddStudent({ setShowAddStudent }) {
                     Cancel
                 </button>
                 <button 
-                    onClick={handleSubmit} 
+                    onClick={mode === "customizable" ? handleSubmit : handleBulkImport} 
                     className="bg-[var(--green-color)] p-2 font-medium text-[var(--w-color)] rounded-md cursor-pointer"
                 >
-                    Add Student
+                    {mode === "customizable" ? "Add Student" : "Import Students"}
                 </button>
             </div>
         </div>
