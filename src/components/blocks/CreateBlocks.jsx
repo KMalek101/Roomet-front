@@ -41,7 +41,7 @@ export default function CreateBlocks() {
         numberofBlocks: Number(formData.blocksNumber),
         floors: Number(formData.floorsPerBlock),
         roomsPerFloor: Number(formData.roomsPerFloor),
-        RoomsCapacity: Number(formData.maxStudents)
+        roomsCapacity: Number(formData.maxStudents)
       };
 
       console.log(numericData);

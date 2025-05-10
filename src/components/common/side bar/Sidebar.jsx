@@ -26,10 +26,17 @@ export default function Sidebar() {
     "/" + label.toLowerCase().replace(/\s+/g, "-");
 
   const handleClick = (label) => {
-    const route = getRouteFromLabel(label);
+    let route = getRouteFromLabel(label); 
+    
+    // Special case for profile route - note we now check for "/profile"
+    if (route === "/profile") {
+      route = `${route}/me`;
+    }
+    
+    console.log(route);
     router.push(route);
   };
-
+  
   return (
     <div className="sidebar bg-[var(--secondary-color)] text-sm w-60 h-[var(--sidebar-height)] border-r border-[var(--g-color)]">
       {menuItems.map((item, index) => {

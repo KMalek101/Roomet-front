@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import RoomListCard from "./RoomListCard";
 import RoomGridCard from "./RoomGridCard";
 import { useRouter } from "next/navigation";
+import { getRooms } from "@/utils/rooms";
 
 export default function ViewRooms() {
   const [selection, setSelection] = useState("grid");
@@ -248,111 +249,122 @@ export default function ViewRooms() {
     );
   };
 
-  const roomData = [
-    { name: "H309", students: ["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"], maxStudents: 4, reports: 14, block: "H" },
-    { name: "H310", students: ["A_Bouzar", "N_Zitouni"], maxStudents: 4, reports: 7, block: "H" },
-    { name: "H311", students: ["Y_Belhadj", "F_Tebib", "D_Lounis"], maxStudents: 4, reports: 3, block: "H" },
-    { name: "H312", students: ["S_Mebarki", "R_Benhammou", "L_Khider"], maxStudents: 4, reports: 5, block: "H" },
-    { name: "H313", students: ["I_Hadjar", "T_Benali"], maxStudents: 4, reports: 8, block: "H" },
-    { name: "H314", students: ["C_Bourahla", "K_Zouaoui"], maxStudents: 4, reports: 2, block: "H" },
-    { name: "H315", students: ["A_Toumi", "E_Benmeriem", "M_Hassani"], maxStudents: 4, reports: 9, block: "H" },
-    { name: "H316", students: ["B_Daraji", "S_Nekkache"], maxStudents: 4, reports: 1, block: "H" },
-    { name: "H317", students: ["Z_Mansouri", "N_Benameur", "O_Bekkouche"], maxStudents: 4, reports: 6, block: "H" },
-  ];
+  const [rooms, setRooms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Filter rooms based on selected filters
-  const filteredRooms = roomData.filter((room) => {
+  useEffect(() => {
+    const fetchRoomsData = async () => {
+      try {
+        const fetchedData = await getRooms();
+        setRooms(fetchedData);
+        console.log(fetchRoomsData);
+      } catch (err) {
+        setError("Failed to fetch rooms.");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRoomsData();
+  }, []);
+  const students = ["malek", "walid"]
+
+  const filteredRooms = rooms.filter((room) => {
     if (filters.length === 0 || filters.includes("all")) return true;
-  
+    
     const conditions = {
-      active: room.students.length < room.maxStudents,
-      completed: room.students.length === room.maxStudents,
+      active: room.students.length < room.capacity,
+      completed: room.students.length === room.capacity,
       noreports: room.reports === 0,
       empty: room.students.length === 0,
     };
-  
+    
     return filters.some((filter) => conditions[filter]);
   });
-
-const sortedRooms = filteredRooms.sort((a, b) => {
+  
+  const sortedRooms = [...filteredRooms].sort((a, b) => {
     const column = Object.keys(sortDirection).find((key) => sortDirection[key] !== null);
     const direction = sortDirection[column];
-  
-    if (!column || !direction) return 0;
-  
-    const availabilityA = (a.maxStudents - a.students.length) * 100 / a.maxStudents;
-    const availabilityB = (b.maxStudents - b.students.length) * 100 / b.maxStudents;
-  
-    let valA, valB;
     
+    if (!column || !direction) return 0;
+
+    const availabilityA = ((a.capacity - a.students.length) * 100) / a.capacity;
+    const availabilityB = ((b.capacity - b.students.length) * 100) / b.capacity;
+
+    let valA, valB;
+
     if (column === "availability") {
       valA = availabilityA;
       valB = availabilityB;
     } else if (column === "students") {
-      const studentsA = a.students.join(', ').toLowerCase();
-      const studentsB = b.students.join(', ').toLowerCase();
-      valA = studentsA;
-      valB = studentsB;
+      valA = a.students.join(', ').toLowerCase();
+      valB = b.students.join(', ').toLowerCase();
     } else {
       valA = a[column];
       valB = b[column];
     }
-  
+
     if (typeof valA === "string") {
       valA = valA.toLowerCase();
       valB = valB.toLowerCase();
     }
-  
+    
     if (valA < valB) return direction === "asc" ? -1 : 1;
     if (valA > valB) return direction === "asc" ? 1 : -1;
     return 0;
   });
   
+  console.log(sortedRooms)
+
   const handleRoomClick = (room) => {
     router.push(`/rooms/${room.name}`);
-  }
+  };
+
   return (
     <div className="flex flex-col gap-4 p-6 rounded-md flex-1">
       <div className="bg-[var(--secondary-color)] flex items-center gap-4 p-6 rounded-md">
-        <label htmlFor="viewMode" className="font-medium">
-          View rooms as
-        </label>
+        <label htmlFor="viewMode" className="font-medium">View rooms as</label>
         <CustomDropdown />
-        <p className="font-medium pl-12">Filter blocks as</p>
+        <p className="font-medium pl-12">Filter rooms as</p>
         <Filter />
       </div>
 
-      <Header />
+      <Header sortDirection={sortDirection} setSortDirection={() => {}} />
+
       <div className="h-[1px] w-full p-2">
         <div className="h-[1px] w-full bg-[var(--g-color)] opacity-25"></div>
       </div>
 
-      {selection === "list" ? (
+      {isLoading ? (
+        <p className="text-center text-gray-500">Loading rooms...</p>
+      ) : error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : sortedRooms.length === 0 ? (
+        <p className="text-center text-gray-400">No rooms match your filters.</p>
+      ) : selection === "list" ? (
         <div className="flex flex-col gap-4">
           {sortedRooms.map((room, index) => (
-            <div onClick={() => handleRoomClick(room)}>
+            <div key={index} onClick={() => handleRoomClick(room)}>
               <RoomListCard
-                key={index}
-                name={room.name}
-                students={room.students}
-                maxStudents={room.maxStudents}
+                name={room.number}
+                students={students}
+                maxStudents={room.capacity}
                 reports={room.reports}
                 block={room.block}
               />
             </div>
           ))}
         </div>
-
       ) : (
-
         <div className="flex gap-6.5 flex-wrap">
           {sortedRooms.map((room, index) => (
-            <div onClick={() => handleRoomClick(room)}>
+            <div key={index} onClick={() => handleRoomClick(room)}>
               <RoomGridCard
-                key={index}
-                name={room.name}
-                students={room.students}
-                maxStudents={room.maxStudents}
+                name={room.number}
+                students={students}
+                maxStudents={room.capacity}
                 reports={room.reports}
                 block={room.block}
               />

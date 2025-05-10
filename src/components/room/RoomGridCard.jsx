@@ -8,7 +8,7 @@ export default function RoomGridCard({ name, students, maxStudents, reports, blo
             </div>
             <p className={`${students.length === maxStudents ? "text-[var(--r-color)]" : "text-[var(--green-color)]"}`}>{students.length} / {maxStudents}</p>
             <p>{reports}</p>
-            <p>{block}</p>
+            <p>{block.name}</p>
         </div>
     )
 }
