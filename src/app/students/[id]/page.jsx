@@ -19,7 +19,7 @@ export default function Page() {
         setLoading(true);
         const data = await getStudent(id);
         console.log(data);
-        setStudentData(data);
+        setStudentData(data.student);
         setLoading(false);
       })();
     }

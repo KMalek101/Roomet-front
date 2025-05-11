@@ -247,9 +247,11 @@ export default function Student({ firstName, lastName, email, phone, room, block
                                         onClick={() => {
                                             setShowRoomDropdown(!showRoomDropdown);
                                             setShowBlockDropdown(false);
+                                            e.stopPropagation();
+                                            
                                         }}
                                     >
-                                        {studentData.room || "Select a room"}
+                                        {studentData.room.number || "Select a room"}
                                     </div>
                                     
                                     {showRoomDropdown && (
@@ -274,7 +276,7 @@ export default function Student({ firstName, lastName, email, phone, room, block
                                                         <div
                                                             key={room}
                                                             className={`px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
-                                                                studentData.room === room ? "bg-[var(--g-color-opacity)]" : ""
+                                                                studentData.room.number === room.number ? "bg-[var(--g-color-opacity)]" : ""
                                                             }`}
                                                             onClick={(e) => handleRoomSelect(room, e)}
                                                         >
@@ -289,7 +291,7 @@ export default function Student({ firstName, lastName, email, phone, room, block
                                     )}
                                 </div>
                             ) : (
-                                <p className="text-[var(--g-color)]">{studentData.room}</p>
+                                <p className="text-[var(--g-color)]">{studentData.room.number}</p>
                             )}
                         </div>
 
@@ -303,9 +305,10 @@ export default function Student({ firstName, lastName, email, phone, room, block
                                         onClick={() => {
                                             setShowBlockDropdown(!showBlockDropdown);
                                             setShowRoomDropdown(false);
+                                            e.stopPropagation();
                                         }}
                                     >
-                                        {studentData.block || "Select a block"}
+                                        {studentData.block.name || "Select a block"}
                                     </div>
                                     
                                     {showBlockDropdown && (
@@ -330,7 +333,7 @@ export default function Student({ firstName, lastName, email, phone, room, block
                                                         <div
                                                             key={block}
                                                             className={`px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
-                                                                studentData.block === block ? "bg-[var(--g-color-opacity)]" : ""
+                                                                studentData.block.name === block.name ? "bg-[var(--g-color-opacity)]" : ""
                                                             }`}
                                                             onClick={(e) => handleBlockSelect(block, e)}
                                                         >
@@ -345,13 +348,13 @@ export default function Student({ firstName, lastName, email, phone, room, block
                                     )}
                                 </div>
                             ) : (
-                                <p className="text-[var(--g-color)]">{studentData.block}</p>
+                                <p className="text-[var(--g-color)]">{studentData.block.name}</p>
                             )}
                         </div>
 
                         <div className="grid grid-cols-2 items-center">
                             <p className="font-medium">Reports:</p>
-                            <p className="text-[var(--g-color)]">{studentData.reports}</p>
+                            <p className="text-[var(--g-color)]">{studentData.reports.count}</p>
                         </div>
 
                         {/* Supplies - Editable in edit mode */}
