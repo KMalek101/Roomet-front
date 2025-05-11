@@ -250,11 +250,13 @@ export default function ViewBlocks() {
 const [isLoading, setIsLoading] = useState(true);
 const [error, setError] = useState(null);
 
+// here's the fetch for blocks
 useEffect(() => {
   const fetchBlocksData = async () => {
     try {
       const fetchedData = await getBlocks();
       setBlocks(fetchedData);
+      console.log(fetchedData);
     } catch (err) {
       setError("Failed to fetch blocks.");
       console.error("Fetch error:", err);
@@ -270,10 +272,10 @@ const filteredBlocks = blocks.filter((block) => {
   if (filters.length === 0 || filters.includes("all")) return true;
 
   const conditions = {
-    active: block.totalStudents < block.maxStudents,
-    completed: block.totalStudents === block.maxStudents,
-    noreports: block.numberOfReports === 0,
-    empty: block.totalStudents === 0,
+    active: block.students < (block.roomsCapacity * block.totalRooms),
+    completed: block.students === (block.roomsCapacity * block.totalRooms),
+    noreports: block.reports === 0,
+    empty: block.students === 0,
   };
 
   return filters.some((filter) => conditions[filter]);
@@ -285,8 +287,8 @@ const sortedBlocks = [...filteredBlocks].sort((a, b) => {
 
   if (!column || !direction) return 0;
 
-  const availabilityA = ((a.maxStudents - a.totalStudents) * 100) / a.maxStudents;
-  const availabilityB = ((b.maxStudents - b.totalStudents) * 100) / b.maxStudents;
+  const availabilityA = ((a.maxStudents - a.students) * 100) / a.maxStudents;
+  const availabilityB = ((b.maxStudents - b.students) * 100) / b.maxStudents;
 
   let valA = column === "availability" ? availabilityA : a[column];
   let valB = column === "availability" ? availabilityB : b[column];
@@ -328,10 +330,10 @@ return (
           <BlockListCard
             key={index}
             name={block.name}
-            students={block.totalStudents}
-            maxStudents={block.maxStudents}
-            availability={(block.maxStudents - block.totalStudents) * 100 / block.maxStudents}
-            reports={block.numberOfReports}
+            students={block.students}
+            maxStudents={(block.roomsCapacity * block.totalRooms)}
+            availability={((block.roomsCapacity * block.totalRooms) - block.students) * 100 / (block.roomsCapacity * block.totalRooms)}
+            reports={block.reports}
           />
         ))}
       </div>
@@ -341,10 +343,10 @@ return (
           <BlockGridCard
             key={index}
             name={block.name}
-            students={block.totalStudents}
-            maxStudents={block.maxStudents}
-            availability={(block.maxStudents - block.totalStudents) * 100 / block.maxStudents}
-            reports={block.numberOfReports}
+            students={block.students}
+            maxStudents={(block.roomsCapacity * block.totalRooms)}
+            availability={((block.roomsCapacity * block.totalRooms) - block.students) * 100 / (block.roomsCapacity * block.totalRooms)}
+            reports={block.reports}
           />
         ))}
       </div>
