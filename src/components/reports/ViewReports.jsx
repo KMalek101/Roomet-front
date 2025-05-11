@@ -79,10 +79,6 @@ export default function ViewReports() {
     });
   };
 
-  const handleClick = (report) => {
-    router.push(`/reports/${report.status + report.date}`);
-  }
-
   const CustomDropdown = () => {
     return (
       <div className="relative w-72 text-sm">
@@ -248,6 +244,10 @@ export default function ViewReports() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const handleClick = (report) => {
+    router.push(`/reports/${report.id}`);
+  }
+
   useEffect(() => {
     const fetchReportsData = async () => {
       try {
@@ -259,7 +259,8 @@ export default function ViewReports() {
             status: report.status || "Unknown",
             date: new Date(report.createdAt).toISOString().split("T")[0], // format as "YYYY-MM-DD"
             urgency: report.urgency || "Unknown",
-            block: report.room?.block || "N/A"
+            block: report.room?.block || "N/A",
+            id: report._id || undefined
           };
         });
 
