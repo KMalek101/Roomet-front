@@ -247,8 +247,8 @@ export default function ViewBlocks() {
   }, []);
 
   const [blocks, setBlocks] = useState([]);
-const [isLoading, setIsLoading] = useState(true);
-const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
 // here's the fetch for blocks
 useEffect(() => {

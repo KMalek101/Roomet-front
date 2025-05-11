@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import ReportGridCard from "./ReportGridCard";
 import ReportListCard from "./ReportListCard";
 import { useRouter } from "next/navigation";
+import { getReports } from "@/utils/maintenance";
 
 export default function ViewReports() {
   const [selection, setSelection] = useState("grid");
@@ -243,22 +244,38 @@ export default function ViewReports() {
     };
   }, []);
 
-  const reportData = [
-    { status: "Open", date: "2025-04-01", urgency: "High", block: "J" },
-    { status: "Closed", date: "2025-04-02", urgency: "Low", block: "A" },
-    { status: "Open", date: "2025-04-03", urgency: "Medium", block: "B" },
-    { status: "Closed", date: "2025-04-04", urgency: "High", block: "C" },
-    { status: "Open", date: "2025-04-05", urgency: "Low", block: "D" },
-    { status: "Open", date: "2025-04-06", urgency: "High", block: "E" },
-    { status: "Closed", date: "2025-04-07", urgency: "Medium", block: "F" },
-    { status: "Open", date: "2025-04-08", urgency: "High", block: "G" },
-    { status: "Closed", date: "2025-04-09", urgency: "Low", block: "H" },
-    { status: "Open", date: "2025-04-10", urgency: "Medium", block: "I" },
-    { status: "Closed", date: "2025-04-11", urgency: "Low", block: "J" },
-    { status: "Open", date: "2025-04-12", urgency: "High", block: "A" },
-    { status: "Closed", date: "2025-04-13", urgency: "High", block: "B" },
-  ];
-  
+  const [reports, setReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchReportsData = async () => {
+      try {
+        const fetchedData = await getReports();
+        console.log(fetchedData);
+        // Transform to match your reports shape
+        const formattedData = fetchedData.map((report) => {
+          return {
+            status: report.status || "Unknown",
+            date: new Date(report.createdAt).toISOString().split("T")[0], // format as "YYYY-MM-DD"
+            urgency: report.urgency || "Unknown",
+            block: report.room?.block || "N/A"
+          };
+        });
+
+        setReports(formattedData); 
+        console.log("Formatted reports:", formattedData);
+      } catch (err) {
+        setError("Failed to fetch reports.");
+        console.error("Fetch error:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReportsData();
+  }, []);
+
   // Define urgency levels for proper sorting
   const urgencyLevels = {
     'Low': 1,
@@ -267,7 +284,7 @@ export default function ViewReports() {
   };
 
   // Filter reports based on selected filters
-  const filteredReports = reportData.filter((report) => {
+  const filteredReports = reports.filter((report) => {
     if (filters.length === 0 || filters.includes("all")) return true;
   
     const conditions = {
@@ -336,7 +353,7 @@ export default function ViewReports() {
       <div className="flex gap-6.5 flex-wrap">
             {sortedReports.map((report, index) => (
                 <div onClick={() => handleClick(report)}>
-                  <ReportGridCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block}/>
+                  <ReportGridCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block.name}/>
                 </div>
             ))}
       </div>
