@@ -22,15 +22,14 @@ export default function page() {
           
           // Transform the data to match your Report component's expected format
           const formattedData = {
-            name: `${data?.student?.firstName || ''} ${data?.student?.lastName || ''}`.trim() || "Unknown Student",
+            student: data?.student || null, // Pass the entire student object
             submittedAt: new Date(data?.createdAt).toLocaleString(),
             urgency: data?.urgency || "Unknown",
             status: data?.status || "Unknown",
             description: data?.additionalDescription || "No description provided",
             issues: data?.issues || [],
-            roomNumber: data?.room?.number || "N/A",
-            blockName: data?.room?.block?.name || "N/A",
-            studentEmail: data?.student?.email || "No email provided"
+            roomNumber: data?.student?.room?.number || "N/A",
+            blockName: data?.student?.room?.block?.name || "N/A"
           };
           
           console.log("Formatted report data:", formattedData);
@@ -53,7 +52,7 @@ export default function page() {
             ) : (
               reportData && (
                 <Report
-                  name={reportData.name}
+                  student={reportData.student}
                   submittedAt={reportData.submittedAt}
                   urgency={reportData.urgency}
                   status={reportData.status}
@@ -61,7 +60,6 @@ export default function page() {
                   issues={reportData.issues}
                   roomNumber={reportData.roomNumber}
                   blockName={reportData.blockName}
-                  studentEmail={reportData.studentEmail}
                 />
               )
             )}

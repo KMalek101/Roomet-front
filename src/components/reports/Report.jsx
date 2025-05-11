@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 
 const urgencyColor = {
     Critical: "font-medium text-red-600", 
@@ -8,15 +9,14 @@ const urgencyColor = {
 };
 
 export default function Report({ 
-    name, 
+    student,
     submittedAt, 
     urgency, 
     description, 
     issues,
     status: initialStatus,
     roomNumber,
-    blockName,
-    studentEmail 
+    blockName
 }) {
     const [status, setStatus] = useState(initialStatus || "Pending");
 
@@ -26,8 +26,23 @@ export default function Report({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <p><span className="font-medium">Reported by:</span> {name}</p>
-                    <p><span className="font-medium">Email:</span> {studentEmail}</p>
+                    <p>
+                        <span className="font-medium">Reported by:</span>{" "}
+                        {student?._id ? (
+                            <Link 
+                                href={`/students/${student._id}`}
+                                className="text-[var(--green-color)] hover:underline"
+                            >
+                                {student.firstName} {student.lastName}
+                            </Link>
+                        ) : (
+                            <span>Unknown Student</span>
+                        )}
+                    </p>
+                    <p>
+                        <span className="font-medium">Email:</span>{" "}
+                        {student?.email || "No email provided"}
+                    </p>
                     <p><span className="font-medium">Submitted at:</span> {submittedAt}</p>
                 </div>
                 <div>
