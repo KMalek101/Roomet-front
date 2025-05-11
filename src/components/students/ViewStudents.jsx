@@ -305,7 +305,8 @@ export default function ViewStudents() {
   });
   
   const handleStudentClick = (student) => {
-    router.push(`/students/${student.id}`);
+    console.log(student);
+    router.push(`/students/${student._id}`);
   }
 
   return (

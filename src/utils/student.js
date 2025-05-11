@@ -58,7 +58,7 @@ export async function addStudent(data) {
   }
 }
 
-export async function getStudents(data) {
+export async function getStudents() {
     // First verify session
     const sessionCheck = await fetch('http://localhost:5000/api/auth/is-logged-in', {
       credentials: 'include'
@@ -82,5 +82,30 @@ export async function getStudents(data) {
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to add student');
     }
-  }
+}
+
+export async function getStudent(id) {
+    // First verify session
+    const sessionCheck = await fetch('http://localhost:5000/api/auth/is-logged-in', {
+      credentials: 'include'
+    });  
   
+    console.log(sessionCheck);
+    // if (!sessionCheck.data.loggedIn) {
+    //   throw new Error("Unauthorized - Please login again");
+    // }
+  
+    // Proceed with the blocks initialization
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/assignments/student/${id}`, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to add student');
+    }
+}

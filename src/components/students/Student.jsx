@@ -1,16 +1,16 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
-export default function Student() {
+export default function Student({ firstName, lastName, email, phone, room, block, reports, studentId }) {
     const initialData = {
-        firstName: "Malek",
-        lastName: "Kaouche",
-        id: "12345678",
-        phone: "+213123456789",
-        email: "malek.kaouche@univ.dz",
-        room: "H309",
-        block: "H",
-        reports: 3,
+        firstName: firstName,
+        lastName: lastName,
+        id: studentId,
+        phone: phone,
+        email: email,
+        room: room,
+        block: block,
+        reports: reports,
         supplies: {
             chairs: 3,
             pillows: 3,
@@ -135,7 +135,7 @@ export default function Student() {
 
     const router = useRouter();
     const goToRoom = () => {
-        router.push("/rooms/H309")
+        router.push(`/rooms/${studentData.room}`)
     }
     const urgencyColor = {
         Critical: "font-medium text-red-600", 
@@ -417,7 +417,7 @@ export default function Student() {
                             Save Changes
                         </button>
                         <button 
-                            onClick={handleSave} 
+                            onClick={handleCancel} 
                             className="bg-[var(--w-color)] p-2 font-medium rounded-md cursor-pointer"
                         >
                             Cancel
