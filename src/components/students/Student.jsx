@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { getRooms } from "@/utils/rooms";
 
 export default function Student({ firstName, lastName, email, phone, room, block, reports, studentId }) {
     const initialData = {
@@ -45,17 +46,26 @@ export default function Student({ firstName, lastName, email, phone, room, block
     const roomDropdownRef = useRef(null);
     const blockDropdownRef = useRef(null);
     
-    const availableRooms = [
-    { number: "H309" }, 
-    { number: "H310" },
-    { number: "H311" },
-    { number: "H312" },
-    { number: "H313" },
-    { number: "H314" },
-    { number: "H315" },
-    { number: "H316" },
-    { number: "H317" }
-    ];
+    const [rooms, setRooms] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+    const fetchRoomsData = async () => {
+        try {
+        const fetchedData = await getRooms();
+        setRooms(fetchedData);
+        console.log(fetchedData);
+        } catch (err) {
+        setError("Failed to fetch rooms.");
+        console.error("Fetch error:", err);
+        } finally {
+        setIsLoading(false);
+        }
+    };
+
+    fetchRoomsData();
+    }, []);
 
     const availableBlocks = [
     { name: "A" },
@@ -70,7 +80,7 @@ export default function Student({ firstName, lastName, email, phone, room, block
     { name: "J" }
     ];
 
-    const filteredRooms = availableRooms.filter(room => 
+    const filteredRooms = rooms.filter(room => 
         room.number.toLowerCase().includes(roomSearch.toLowerCase())
     );
 
@@ -158,8 +168,8 @@ export default function Student({ firstName, lastName, email, phone, room, block
     };
 
     const router = useRouter();
-    const goToRoom = () => {
-        router.push(`/rooms/${studentData.room}`)
+    const goToRoom = (id) => {
+        router.push(`/rooms/${id}`)
     }
 
     const urgencyColor = {
@@ -276,9 +286,9 @@ return (
 
       {/* Room Information Section */}
         <div 
-        onClick={(e) => {
+        onClick={() => {
             if (!showRoomDropdown && !showBlockDropdown && studentData.room) {
-                goToRoom();
+                goToRoom(room._id);
             }
         }} 
         className="flex flex-col bg-white brightness-95 rounded-md py-10 px-6 text-lg flex-1 cursor-pointer hover:bg-gray-100"
