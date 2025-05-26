@@ -38,12 +38,12 @@ export default function Page() {
           ) : (
             studentData && (
               <Student
+                studentId={studentData.studentId}
                 firstName={studentData.firstName}
                 lastName={studentData.lastName}
                 email={studentData.email}
                 phone={studentData.phone}
                 room={studentData.room}
-                studentId={studentData.studentId}
                 block={studentData.block}
                 reports={studentData.reports}
               />

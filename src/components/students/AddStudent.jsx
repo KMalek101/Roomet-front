@@ -154,7 +154,7 @@ export default function AddStudent({ setShowAddStudent }) {
             lastName: !formData.lastName.trim(),
             roomSelection: !formData.roomSelection,
             email: !formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email),
-            studentId: !formData.studentId.trim(),
+            // studentId: !formData.studentId.trim(),
             phone: !formData.phone
         };
         
