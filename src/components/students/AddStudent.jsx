@@ -5,12 +5,33 @@ import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { addStudent } from "@/utils/student";
 import { uploadBulkStudents } from "@/utils/student";
+import { getRooms } from "@/utils/rooms";
 
 export default function AddStudent({ setShowAddStudent }) {
     const [roomSearch, setRoomSearch] = useState("");
     const [showRoomDropdown, setShowRoomDropdown] = useState(false);
     const dropdownRef = useRef(null);
-    const availableRooms = ["H309", "H310", "H311", "H312", "H313", "H314", "H315", "H316", "H317"];
+
+    const [rooms, setRooms] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+    const fetchRoomsData = async () => {
+        try {
+        const fetchedData = await getRooms();
+        setRooms(fetchedData);
+        console.log(fetchedData);
+        } catch (err) {
+        setError("Failed to fetch rooms.");
+        console.error("Fetch error:", err);
+        } finally {
+        setIsLoading(false);
+        }
+    };
+
+    fetchRoomsData();
+    }, []);
     
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -76,7 +97,7 @@ export default function AddStudent({ setShowAddStudent }) {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
-        roomSelection: "",
+        roomSelection: {},
         email: "",
         studentId: "",
         phone: ""
@@ -91,9 +112,10 @@ export default function AddStudent({ setShowAddStudent }) {
         phone: false
     });
 
-    const filteredRooms = availableRooms.filter(room => 
-        room.toLowerCase().includes(roomSearch.toLowerCase())
+    const filteredRooms = rooms.filter(room =>
+        room.number.toLowerCase().includes(roomSearch.toLowerCase())
     );
+
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -152,9 +174,8 @@ export default function AddStudent({ setShowAddStudent }) {
         const newErrors = {
             firstName: !formData.firstName.trim(),
             lastName: !formData.lastName.trim(),
-            roomSelection: !formData.roomSelection,
+            roomSelection: !formData.roomSelection?.id, // Check for id instead of just object
             email: !formData.email.trim() || !/^\S+@\S+\.\S+$/.test(formData.email),
-            // studentId: !formData.studentId.trim(),
             phone: !formData.phone
         };
         
@@ -184,7 +205,7 @@ export default function AddStudent({ setShowAddStudent }) {
             setLoading(false);
             return;
         }
-    
+
         try {
             const studentData = {
                 firstName: formData.firstName.trim(),
@@ -192,13 +213,12 @@ export default function AddStudent({ setShowAddStudent }) {
                 email: formData.email.trim(),
                 studentId: formData.studentId.trim(),
                 phone: formData.phone,
-                roomSelection: formData.roomSelection
+                roomId: formData.roomSelection?.id || null, // Send room ID or null if no room selected
             };
-    
+
             await addStudent(studentData);
             console.log("Student added successfully!");
             setShowAddStudent(false);
-            console.log("Student added successfully!");
         } catch (error) {
             console.error("Error submitting form:", error);
             console.error("Failed to add student. Please try again.");
@@ -277,11 +297,10 @@ export default function AddStudent({ setShowAddStudent }) {
                             <p className="text-xs text-[var(--g-color)] cursor-text">Assign student to a room</p>
                         </div>
                         <div className="ml-56 w-72 relative" ref={dropdownRef}>
-                            <div 
-                                className={`bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm h-[44px] flex items-center cursor-pointer ${errors.roomSelection ? "border border-red-500" : ""}`}
+                            <div className={`bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm h-[44px] flex items-center cursor-pointer ${errors.roomSelection ? "border border-red-500" : ""}`}
                                 onClick={() => setShowRoomDropdown(!showRoomDropdown)}
                             >
-                                {formData.roomSelection || "Select a room"}
+                                {formData.roomSelection?.number || "Select a room"}
                             </div>
                             {errors.roomSelection && <span className="text-red-500 text-xs mt-1">Room selection is required</span>}
                             
@@ -301,25 +320,25 @@ export default function AddStudent({ setShowAddStudent }) {
                                     <div className="py-1 relative z-10">
                                         {filteredRooms.length > 0 ? (
                                             filteredRooms.map(room => (
-                                                <div
-                                                    key={room}
-                                                    className={`px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
-                                                        formData.roomSelection === room ? "bg-[var(--g-color-opacity)]" : ""
-                                                    }`}
-                                                    onClick={() => handleRoomSelect(room)}
-                                                >
-                                                    {room}
-                                                </div>
+                                            <div
+                                                key={room.id}
+                                                className={`px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
+                                                    formData.roomSelection?.id === room.id ? "bg-[var(--g-color-opacity)]" : ""
+                                                }`}
+                                                onClick={() => handleRoomSelect(room)}
+                                            >
+                                                {room.number}
+                                            </div>
                                             ))
                                         ) : (
                                             <div className="px-3 py-2 text-gray-500">No rooms found</div>
                                         )}
-                                        
+
                                         <div
                                             className={`px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] border-t border-[var(--g-color-opacity)] ${
-                                                formData.roomSelection === "none" ? "bg-[var(--g-color-opacity)]" : ""
+                                                formData.roomSelection === null ? "bg-[var(--g-color-opacity)]" : ""
                                             }`}
-                                            onClick={() => handleRoomSelect("none")}
+                                            onClick={() => handleRoomSelect(null)} // Set to null instead of "none"
                                         >
                                             No room
                                         </div>
