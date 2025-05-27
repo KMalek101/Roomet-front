@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { getRooms } from "@/utils/rooms";
+import { getBlocks } from "@/utils/blocks";
 
 export default function Student({ firstName, lastName, email, phone, room, block, reports, studentId }) {
     const initialData = {
@@ -66,26 +67,34 @@ export default function Student({ firstName, lastName, email, phone, room, block
 
     fetchRoomsData();
     }, []);
+  const [blocks, setBlocks] = useState([]);
+  const [isLoadingBlocks, setIsLoadingBlocks] = useState(true);
+  const [errorBlock, setErrorBlock] = useState(null);
 
-    const availableBlocks = [
-    { name: "A" },
-    { name: "B" },
-    { name: "C" },
-    { name: "D" },
-    { name: "E" },
-    { name: "F" },
-    { name: "G" },
-    { name: "H" },
-    { name: "I" },
-    { name: "J" }
-    ];
+    // here's the fetch for blocks
+    useEffect(() => {
+      const fetchBlocksData = async () => {
+        try {
+          const fetchedData = await getBlocks();
+          setBlocks(fetchedData);
+          console.log(fetchedData);
+        } catch (err) {
+          setErrorBlock("Failed to fetch blocks.");
+          console.error("Fetch error:", err);
+        } finally {
+          setIsLoadingBlocks(false);
+        }
+      };
+
+      fetchBlocksData();
+    }, []);
 
     const filteredRooms = rooms.filter(room => 
         room.number.toLowerCase().includes(roomSearch.toLowerCase())
     );
 
-    const filteredBlocks = availableBlocks.filter(block => 
-    block.name.toLowerCase().includes(blockSearch.toLowerCase())
+    const filteredBlocks = blocks.filter(block => 
+        block.name.toLowerCase().includes(blockSearch.toLowerCase())
     );
 
     const [editMode, setEditMode] = useState(false);
@@ -169,19 +178,20 @@ export default function Student({ firstName, lastName, email, phone, room, block
 
     const router = useRouter();
     const goToRoom = (id) => {
-        router.push(`/rooms/${id}`)
+      router.push(`/rooms/${id}`)
     }
 
     const urgencyColor = {
-    Critical: "font-medium text-red-600", 
-    High: "font-medium text-red-500",
-    Medium: "font-medium text-yellow-500",
-    Low: "text-green-600",
+      Critical: "font-medium text-red-600", 
+      High: "font-medium text-red-500",
+      Medium: "font-medium text-yellow-500",
+      Low: "text-green-600",
     };
 
     const pushToReport = (id) => {
         router.push(`/reports/${id}`)
     }
+    
 return (
   <div className="bg-[var(--secondary-color)] h-full w-full rounded-md">
     {/* Student Name (with null check) */}

@@ -31,7 +31,6 @@ export async function uploadBulkStudents(file) {
   }
 }
 
-
 export async function addStudent(data) {
   // First verify session
   const sessionCheck = await fetch('http://localhost:5000/api/auth/is-logged-in', {

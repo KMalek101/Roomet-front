@@ -20,12 +20,13 @@ export default function Redirecting() {
         
         fetch(`http://localhost:5000/api/auth/verify-email/${id}`, {
             method: "GET",
-            credentials: 'include' // Ensure cookies are sent
+            credentials: 'include' 
         })
             .then((response) => {
                 if (!response.ok) throw new Error("Verification failed");
                 return response.json();
             })
+            
             .then((data) => {
                 if (data.success) {
                     setStatus("success");
