@@ -42,3 +42,18 @@ export async function getRooms() {
     throw new Error(error.response?.data?.message || 'Failed to get rooms');
   }
 }
+
+export async function getRoom(id) {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/rooms/${id}`, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch rooms');
+    }
+}

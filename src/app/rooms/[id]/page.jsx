@@ -1,12 +1,35 @@
 'use client'
 import Header from "@/components/common/header/Header";
-import ViewRooms from "@/components/room/ViewRooms";
 import Sidebar from "@/components/common/side bar/Sidebar";
 import Room from "@/components/room/Room";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReportForum from "@/components/reports/ReportForume";
-export default function page() {
-  const [showReportForum, setShowReportForum] = useState(false); 
+import { getRoom } from "@/utils/rooms";
+import { useParams } from "next/navigation";
+
+export default function Page() {
+  const [showReportForum, setShowReportForum] = useState(false);
+  const params = useParams();
+  const id = params?.id;
+  const [roomData, setRoomData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id) {
+      (async () => {
+        setLoading(true);
+        try {
+          const data = await getRoom(id);
+          setRoomData(data); 
+          console.log(data)
+        } catch (error) {
+          console.error("Error fetching room:", error);
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [id]);
 
   return (
     <div className="h-screen w-screen overflow-hidden relative">
@@ -14,9 +37,27 @@ export default function page() {
       <div className="flex overflow-hidden">
         <Sidebar />
         <div className="flex flex-col py-6 px-12 flex-1 overflow-y-auto h-screen no-scrollbar pb-24">
-            <Room />
+          {loading ? (
+            <div className="flex justify-center items-center h-full">
+              <span className="text-gray-500">Loading...</span>
+            </div>
+          ) : roomData ? (
+            <Room 
+              number={roomData.number}
+              students={roomData.students}
+              block={roomData.block}
+              maxStudents={roomData.maxStudents}
+              reports={roomData.reports}
+              supplies={roomData.supplies}
+            />
+          ) : (
+            <div className="flex justify-center items-center h-full">
+              <span className="text-gray-500">No room data found</span>
+            </div>
+          )}
         </div>
       </div>
+
       <button 
         onClick={() => setShowReportForum(true)}
         className="text-[var(--w-color)] p-2 cursor-pointer flex items-center justify-center absolute bottom-12 right-18 bg-[var(--green-color)] rounded-md opacity-50 hover:opacity-100 transition-all duration-25 ease-in">

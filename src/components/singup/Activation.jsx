@@ -77,6 +77,7 @@ export function Activation({ token }) {
                     <p className="text-sm text-[var(--g-color)]">
                         Your account has been successfully activated.
                     </p>
+                    <p><a href="/login">Please click here to go to the login page</a></p>
                 </div>
             </div>
         );

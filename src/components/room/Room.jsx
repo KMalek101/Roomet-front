@@ -3,13 +3,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Room() {
+export default function Room( { number, block, students, reports }) {
     const initialData = { 
-        name: "H309", 
-        students: ["M_Kaouche", "W_Kacha", "Z_Abderrahime", "M_Sayedahmed"], 
+        name: number,
+        students: students,
         maxStudents: 4, 
-        reports: 14, 
-        block: "H",
+        reports: reports, 
+        block: block,
         supplies: {
             chairs: 3,
             pillows: 3,
@@ -31,9 +31,15 @@ export default function Room() {
         block.toLowerCase().includes(blockSearch.toLowerCase())
     );
 
-    const filteredStudents = roomData.students.filter(student => 
-        student.toLowerCase().includes(query.toLowerCase())
-    );
+    const filteredStudents = roomData.students.filter(student => {
+        if (!student || !student.firstName) return false;
+        const fullName = `${student.firstName} ${student.lastName || ''}`.toLowerCase();
+        const searchQuery = query.toLowerCase();
+        return (
+            student.firstName.toLowerCase().includes(searchQuery) ||
+            fullName.includes(searchQuery)
+        );
+    });
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -161,7 +167,7 @@ export default function Room() {
                                         className="bg-[var(--g-color-opacity)] rounded-md py-1.5 px-2 text-sm h-[44px] flex items-center cursor-pointer"
                                         onClick={() => setShowBlockDropdown(!showBlockDropdown)}
                                     >
-                                        {roomData.block || "Select a block"}
+                                        {roomData.block.name || "Select a block"}
                                     </div>
                                     
                                     {showBlockDropdown && (
@@ -184,13 +190,13 @@ export default function Room() {
                                                 {filteredBlocks.length > 0 ? (
                                                     filteredBlocks.map(block => (
                                                         <div
-                                                            key={block}
+                                                            key={block._id}
                                                             className={`px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
-                                                                roomData.block === block ? "bg-[var(--g-color-opacity)]" : ""
+                                                                roomData.block.name === block.name ? "bg-[var(--g-color-opacity)]" : ""
                                                             }`}
                                                             onClick={(e) => handleBlockSelect(block, e)}
                                                         >
-                                                            {block}
+                                                            {block.name}
                                                         </div>
                                                     ))
                                                 ) : (
@@ -201,7 +207,7 @@ export default function Room() {
                                     )}
                                 </div>
                             ) : (
-                                <p className="text-[var(--g-color)]">{roomData.block}</p>
+                                <p className="text-[var(--g-color)]">{roomData.block.name}</p>
                             )}
                         </div>
                     </div>
@@ -255,13 +261,20 @@ export default function Room() {
                         </div>
                         <div className="">
                             {filteredStudents.map((student, index) => (
-                                <p 
-                                    className="py-2 pl-4 cursor-pointer hover:bg-gray-100" 
-                                    key={index}
-                                    onClick={() => goToStudent(student)}
+                                <div 
+                                className="py-2 pl-4 cursor-pointer hover:bg-gray-100 flex justify-between items-center" 
+                                key={student._id || index}
+                                onClick={() => goToStudent(student._id)}
                                 >
-                                    {student}
-                                </p>
+                                <span>
+                                    {student.firstName} {student.lastName}
+                                </span>
+                                {student.studentId && (
+                                    <span className="text-sm text-gray-500">
+                                    ID: {student.studentId}
+                                    </span>
+                                )}
+                                </div>
                             ))}
                         </div>
                     </div>
