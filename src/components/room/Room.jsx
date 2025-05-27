@@ -3,18 +3,18 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Room( { number, block, students, reports }) {
+export default function Room( { number, block, capacity, students, reports, chairs, tables, pillows, beds }) {
     const initialData = { 
         name: number,
         students: students,
-        maxStudents: 4, 
+        maxStudents: capacity, 
         reports: reports, 
         block: block,
         supplies: {
-            chairs: 3,
-            pillows: 3,
-            tables: 3,
-            beds: 3
+            chairs: chairs,
+            pillows: pillows,
+            tables: tables,
+            beds: beds
         }
     };
 

@@ -48,7 +48,11 @@ export default function Page() {
               block={roomData.block}
               maxStudents={roomData.maxStudents}
               reports={roomData.reports}
-              supplies={roomData.supplies}
+              pillows={roomData.pillows}
+              chairs={roomData.chairs}
+              tables={roomData.tables}
+              beds={roomData.beds}
+              capacity={roomData.capacity}
             />
           ) : (
             <div className="flex justify-center items-center h-full">
