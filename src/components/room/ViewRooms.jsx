@@ -319,7 +319,7 @@ export default function ViewRooms() {
   console.log(sortedRooms)
 
   const handleRoomClick = (room) => {
-    router.push(`/rooms/${room.name}`);
+    router.push(`/rooms/${room?.id}`);
   };
 
   return (
@@ -349,7 +349,7 @@ export default function ViewRooms() {
             <div key={index} onClick={() => handleRoomClick(room)}>
               <RoomListCard
                 name={room.number}
-                students={students}
+                students={room.students}
                 maxStudents={room.capacity}
                 reports={room.reports}
                 block={room.block}
@@ -363,7 +363,7 @@ export default function ViewRooms() {
             <div key={index} onClick={() => handleRoomClick(room)}>
               <RoomGridCard
                 name={room.number}
-                students={students}
+                students={room.students}
                 maxStudents={room.capacity}
                 reports={room.reports}
                 block={room.block}
