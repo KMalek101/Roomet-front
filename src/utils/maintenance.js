@@ -78,3 +78,29 @@ export async function getReport(id) {
       throw new Error(error.response?.data?.message || 'Failed to get report');
     }
 }
+
+export async function updateReport(id, status) {
+  // First verify session
+  const sessionCheck = await fetch('http://localhost:5000/api/auth/is-logged-in', {
+    credentials: 'include'
+  });  
+
+  console.log(sessionCheck);
+  // if (!sessionCheck.data.loggedIn) {
+  //   throw new Error("Unauthorized - Please login again");
+  // }
+
+  // Proceed with the blocks initialization
+  try {
+    const response = await axios.patch(`${API_BASE_URL}/api/maintenance/${id}/status`, status, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to patch request!');
+  }
+}

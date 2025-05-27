@@ -60,6 +60,7 @@ export default function page() {
                   issues={reportData.issues}
                   roomNumber={reportData.roomNumber}
                   blockName={reportData.blockName}
+                  id={id}
                 />
               )
             )}
