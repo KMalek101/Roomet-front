@@ -22,6 +22,7 @@ export function middleware(request) {
     pathname === '/signup' ||
     pathname === '/' ||
     pathname.startsWith('/verification')
+    pathname.startsWith('/activation')
 
   if (!sessionCookie && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))

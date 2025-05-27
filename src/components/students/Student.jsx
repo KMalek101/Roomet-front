@@ -14,10 +14,10 @@ export default function Student({ firstName, lastName, email, phone, room, block
         block: block,
         reports: reports,
         supplies: {
-            chairs: room.chairs,
-            pillows: room.pillows,
-            tables: room.tables,
-            beds: room.beds
+            chairs: room?.chairs,
+            pillows: room?.pillows,
+            tables: room?.tables,
+            beds: room?.beds
         }
     };
 
@@ -191,7 +191,7 @@ export default function Student({ firstName, lastName, email, phone, room, block
     const pushToReport = (id) => {
         router.push(`/reports/${id}`)
     }
-    
+
 return (
   <div className="bg-[var(--secondary-color)] h-full w-full rounded-md">
     {/* Student Name (with null check) */}
