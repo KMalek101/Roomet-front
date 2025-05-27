@@ -35,19 +35,29 @@ export default function ViewReports() {
     },
   ];
 
-  const optionsFilter = [
+const optionsFilter = [
     {
       value: "all",
       label: "All",
     },
+    // Status filters
     {
-      value: "open",
-      label: "Open Reports",
+      value: "pending",
+      label: "Pending",
     },
     {
-      value: "closed",
-      label: "Closed Reports",
+      value: "in-progress",
+      label: "In Progress",
     },
+    {
+      value: "completed",
+      label: "Completed",
+    },
+    {
+      value: "rejected",
+      label: "Rejected",
+    },
+    // Urgency filters (kept from original)
     {
       value: "high",
       label: "High Urgency",
@@ -60,7 +70,7 @@ export default function ViewReports() {
       value: "low",
       label: "Low Urgency",
     },
-  ];  
+];
 
   const handleSelectViewAs = (value) => {
     setSelection(value);
@@ -114,58 +124,85 @@ export default function ViewReports() {
     );
   };
 
-  const Filter = () => {
+
+const Filter = () => {
     return (
         <div
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpenFilter(!isOpenFilter);
-        }}
-         ref={filterRef}
-         className="relative">
-          
-        <button
-          className="bg-[var(--g-color-opacity)] h-[44px] w-full flex items-center justify-between rounded-md px-3 gap-2 py-2 cursor-pointer"
-        >
-          <svg
-            className="w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4.22657 2C2.50087 2 1.58526 4.03892 2.73175 5.32873L8.99972 12.3802V19C8.99972 19.3788 9.21373 19.725 9.55251 19.8944L13.5525 21.8944C13.8625 22.0494 14.2306 22.0329 14.5255 21.8507C14.8203 21.6684 14.9997 21.3466 14.9997 21V12.3802L21.2677 5.32873C22.4142 4.03893 21.4986 2 19.7729 2H4.22657Z"
-              fill="#000000"
-            ></path>
-          </svg>
-          <p>Filter</p>
-        </button>
-        {isOpenFilter && (
-          <div 
+            onClick={(e) => {
+                e.stopPropagation();
+                setIsOpenFilter(!isOpenFilter);
+            }}
             ref={filterRef}
-            className="absolute z-10 mt-1 w-42 bg-white border border-gray-300 rounded-md shadow-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {optionsFilter.map((option) => (
-              <div
-                key={option.value}
-                onClick={() => {
-                  handleSelectFilter(option.value);
-                }}
-                className={`flex items-center px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
-                  filters.includes(option.value)
-                    ? "bg-[var(--g-color-opacity)]"
-                    : ""
-                }`}
-              >
-                {option.label}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            className="relative"
+        >
+            <button
+                className="bg-[var(--g-color-opacity)] h-[44px] w-full flex items-center justify-between rounded-md px-3 gap-2 py-2 cursor-pointer"
+            >
+                <svg
+                    className="w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M4.22657 2C2.50087 2 1.58526 4.03892 2.73175 5.32873L8.99972 12.3802V19C8.99972 19.3788 9.21373 19.725 9.55251 19.8944L13.5525 21.8944C13.8625 22.0494 14.2306 22.0329 14.5255 21.8507C14.8203 21.6684 14.9997 21.3466 14.9997 21V12.3802L21.2677 5.32873C22.4142 4.03893 21.4986 2 19.7729 2H4.22657Z"
+                        fill="#000000"
+                    ></path>
+                </svg>
+                <p>Filter</p>
+                {/* Show active filter count if any filters are selected besides 'all' */}
+                {filters.length > 0 && !filters.includes('all') && (
+                    <span className="ml-2 bg-[var(--green-color)] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        {filters.length}
+                    </span>
+                )}
+            </button>
+            {isOpenFilter && (
+                <div 
+                    ref={filterRef}
+                    className="absolute z-10 mt-1 w-48 bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-y-auto"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {/* Status Filters Section */}
+                    <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                    </div>
+                    {optionsFilter.slice(0, 5).map((option) => (
+                        <div
+                            key={option.value}
+                            onClick={() => handleSelectFilter(option.value)}
+                            className={`flex items-center px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
+                                filters.includes(option.value)
+                                    ? "bg-[var(--g-color-opacity)]"
+                                    : ""
+                            }`}
+                        >
+                            {option.label}
+                        </div>
+                    ))}
+                    
+                    {/* Urgency Filters Section */}
+                    <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Urgency
+                    </div>
+                    {optionsFilter.slice(5).map((option) => (
+                        <div
+                            key={option.value}
+                            onClick={() => handleSelectFilter(option.value)}
+                            className={`flex items-center px-3 py-2 cursor-pointer hover:bg-[var(--g-color-opacity)] ${
+                                filters.includes(option.value)
+                                    ? "bg-[var(--g-color-opacity)]"
+                                    : ""
+                            }`}
+                        >
+                            {option.label}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
     );
-  };
+};
 
   const Header = ({ sortDirection, setSortDirection }) => {
     const handleSort = (column) => {
@@ -346,7 +383,7 @@ export default function ViewReports() {
         <div className="flex flex-col gap-4">
             {sortedReports.map((report, index) => (
                 <div onClick={() => handleClick(report)}>
-                  <ReportListCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block}/>
+                  <ReportListCard key={index} status={report.status} date={report.date} urgency={report.urgency} block={report.block.name}/>
                 </div>
             ))}
         </div>

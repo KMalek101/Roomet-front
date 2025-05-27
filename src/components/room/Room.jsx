@@ -122,6 +122,13 @@ export default function Room( { number, block, capacity, students, reports, chai
         )
     };
 
+        const urgencyColor = {
+            Critical: "font-medium text-red-600", 
+            High: "font-medium text-red-500",
+            Medium: "font-medium text-yellow-500",
+            Low: "text-green-600",
+        };
+
     return(
         <div className="bg-[var(--secondary-color)] h-full w-full rounded-md">
             <div className="flex justify-between items-center px-24 pt-3">
@@ -157,7 +164,7 @@ export default function Room( { number, block, capacity, students, reports, chai
                         </div>
                         <div className="grid grid-cols-2 items-center">
                             <p className="font-medium">Reports:</p>
-                            <p className="text-[var(--g-color)]">{roomData.reports}</p>
+                            <p className="text-[var(--g-color)]">{roomData.reports.length}</p>
                         </div>
                         <div className="grid grid-cols-2 items-center">
                             <p className="font-medium">Block:</p>
@@ -245,7 +252,7 @@ export default function Room( { number, block, capacity, students, reports, chai
                 </div>
             </div>
             
-            <div className="flex pt-12 justify-center gap-32 w-full items-stretch px-24">
+            <div className="flex pt-12 justify-center gap-6 w-full items-stretch px-6">
                 <div className="flex flex-col bg-white brightness-95 rounded-md py-4 px-6 text-lg flex-1">
                     <h2 className="flex justify-center pb-4 text-lg font-medium">Students</h2>
                     <div className="border pt-2 px-2 rounded-2xl border-gray-300">
@@ -280,11 +287,40 @@ export default function Room( { number, block, capacity, students, reports, chai
                     </div>
                 </div>
                 
-                <div className="flex flex-col bg-white brightness-95 rounded-md py-4 px-6 text-lg flex-1">
-                    <h2 className="flex justify-center pb-4 text-lg font-medium">Reports</h2>
-                    <div>
-                        {/* Reports content here */}
+                <div className="flex flex-col bg-white brightness-95 rounded-md py-4 px-6 text-md flex-1">
+                <h2 className="flex justify-center pb-4 text-lg font-medium">Reports</h2>
+                <div className="border pt-2 px-2 rounded-2xl border-gray-300">
+                    <div className="grid grid-cols-12 gap-2 px-4 py-2 font-medium">
+                    <div className="col-span-1">#</div>
+                    <div className="col-span-4">Date</div>
+                    <div className="col-span-3">Issue</div>
+                    <div className="col-span-2">Urgency</div>
+                    <div className="col-span-2">Status</div>
                     </div>
+                    
+                    {/* Grid Rows */}
+                    <div className="py-2">
+                    {roomData?.reports?.length > 0 ? (
+                        roomData.reports.map((report, index) => (
+                        <div
+                            key={index}
+                            onClick={() => pushToReport(report._id)}
+                            className="grid grid-cols-12 gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer items-center"
+                        >
+                            <div className="col-span-1 font-semibold">{index + 1}.</div>
+                            <div className="col-span-4">{new Date(report.createdAt).toLocaleString("en-US")}</div>
+                            <div className="col-span-3 truncate">{report.issues[0]}</div>
+                            <div className={`col-span-2 ${urgencyColor[report.urgency]}`}>{report.urgency}</div>
+                            <div className="col-span-2">{report.status}</div>
+                        </div>
+                        ))
+                    ) : (
+                        <div className="grid grid-cols-12 py-4 text-center text-gray-500">
+                        <div className="col-span-12">No reports found</div>
+                        </div>
+                    )}
+                    </div>
+                </div>
                 </div>
             </div>
             <div className="flex mt-10 justify-center cursor-pointer">
