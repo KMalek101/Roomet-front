@@ -11,15 +11,14 @@ export default function Sidebar() {
     { label: "Profile" },
     { label: "Rooms" },
     { label: "Reports" },
-    { label: "Notifications" },
     { label: "Events" },
     { label: "Restauration" },
     { label: "Blocks" },
     { label: "Settings" },
     { label: "Log out" },
     { label: "Dashboard" },
-    { label: "Support" },
     { label: "Students" },
+    { label: "Admins" },
   ];
 
   const getRouteFromLabel = (label) =>

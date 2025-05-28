@@ -198,7 +198,7 @@ export default function Header() {
                       </p>
                       {notification.relatedRequest && (
                         <a 
-                          href={`/requests/${notification.relatedRequest}`}
+                          href={`/reports/${notification.relatedRequest}`}
                           className="text-xs text-blue-500 mt-1 hover:underline inline-block"
                           onClick={(e) => e.stopPropagation()}
                         >
@@ -220,7 +220,6 @@ export default function Header() {
                   className="text-sm text-blue-500 hover:text-blue-700 font-medium"
                   onClick={(e) => {
                     e.preventDefault();
-                    // Implement your navigation logic here
                     console.log("View all notifications clicked");
                   }}
                 >
