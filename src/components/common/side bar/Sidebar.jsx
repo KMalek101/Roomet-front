@@ -15,7 +15,7 @@ export default function Sidebar() {
 if (!user) return <div className="sidebar">Loading...</div>;
 
     const menuItems = [
-        { label: "Dashboard", roles: ['student', 'admin', 'director'], path: "/dashboard" },
+        { label: "Dashboard", roles: ['admin', 'director'], path: "/dashboard" },
         { label: "Profile", roles: ['student', 'admin', 'director'], path: `/students/${user?.id}` },
         { label: "Rooms", roles: ['admin', 'director'], path: "/rooms" },
         { label: "Reports", roles: ['admin', 'director'], path: "/reports" },
