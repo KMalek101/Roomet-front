@@ -17,12 +17,12 @@ export function middleware(request) {
   }
 
   // Check if path is public
-  const isPublicPath =
-    pathname === '/login' ||
-    pathname === '/signup' ||
-    pathname === '/' ||
-    pathname.startsWith('/verification')
-    pathname.startsWith('/activation')
+ const isPublicPath =
+  pathname === '/login' ||
+  pathname === '/signup' ||
+  pathname === '/' ||
+  pathname.startsWith('/verification') ||
+  pathname.startsWith('/activation');
 
   if (!sessionCookie && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url))
