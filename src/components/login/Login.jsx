@@ -1,9 +1,12 @@
+'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/utils/auth";
+import { useAuthStore } from "@/store/authStore";
 
 export function Login() {
     const router = useRouter();
+    const loginUser = useAuthStore(state => state.login);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -18,7 +21,6 @@ export function Login() {
     function handleChange(e) {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        // Clear error when user types
         setErrors(prev => ({ ...prev, [name]: "" }));
     }
 
@@ -32,7 +34,7 @@ export function Login() {
             general: ""
         });
 
-        // Basic validation
+        // Validation
         if (!formData.email) {
             setErrors(prev => ({ ...prev, email: "Email is required" }));
             return;
@@ -43,7 +45,6 @@ export function Login() {
             return;
         }
 
-        // Email format validation
         if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
             setErrors(prev => ({ ...prev, email: "Please enter a valid email" }));
             return;
@@ -51,31 +52,25 @@ export function Login() {
 
         try {
             setLoading(true);
-            const dataToSend = {
+            const response = await login({
                 email: formData.email,
                 password: formData.password,
-            };
-            await login(dataToSend);
+            });
+            console.log(response);
+            // Save user data using Zustand
+            loginUser(response.user, response.token);
             router.push("/blocks");
         } catch (error) {
-            // Handle specific error messages from your API
-            if (error.message.includes("Invalid credentials")) {
-                setErrors(prev => ({
-                    ...prev,
-                    general: "Invalid email or password"
-                }));
-            } else {
-                setErrors(prev => ({
-                    ...prev,
-                    general: "An error occurred. Please try again."
-                }));
-            }
+            setErrors(prev => ({
+                ...prev,
+                general: error.message || "An error occurred. Please try again."
+            }));
         } finally {
             setLoading(false);
         }
     }
 
-    return (
+ return (
         <form 
             onSubmit={handleSubmit}
             className="flex flex-col gap-4 shadow-xl p-4 rounded-xl z-20 pl-10 bg-[var(--w-color)] h-[400px] w-[400px]"
