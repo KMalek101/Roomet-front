@@ -46,6 +46,7 @@ export default function Page() {
                 room={studentData.room}
                 block={studentData.block}
                 reports={studentData.reports}
+                id={studentData._id}
               />
             )
           )}

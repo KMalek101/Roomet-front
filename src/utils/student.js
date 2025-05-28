@@ -108,3 +108,30 @@ export async function getStudent(id) {
       throw new Error(error.response?.data?.message || 'Failed to add student');
     }
 }
+
+export async function updateStudent(id, studentData) {
+  try {
+    const requestData = {
+      firstName: studentData.firstName,
+      lastName: studentData.lastName,
+      email: studentData.email,
+      phone: studentData.phone,
+      room: studentData.room ? { _id: studentData.room._id } : null
+    };
+
+    const response = await axios.patch(
+      `${API_BASE_URL}/api/assignments/student/${id}`,
+      requestData,
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    return response.data.student;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to update student');
+  }
+}

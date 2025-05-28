@@ -2,12 +2,14 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { getRooms } from "@/utils/rooms";
 import { getBlocks } from "@/utils/blocks";
+import { updateStudent } from "@/utils/student";
 
-export default function Student({ firstName, lastName, email, phone, room, block, reports, studentId }) {
+export default function Student({ firstName, lastName, email, phone, room, block, reports, studentId, id }) {
     const initialData = {
         firstName: firstName,
         lastName: lastName,
         id: studentId,
+        _id: id,
         phone: phone,
         email: email,
         room: room,
@@ -140,18 +142,32 @@ export default function Student({ firstName, lastName, email, phone, room, block
         setIsDirty(checkDirty(newData));
     };
 
-    const handleRoomSelect = (room, e) => {
-        e.stopPropagation(); 
-        const newData = {
-            ...studentData,
-            room
-        };
-        setStudentData(newData);
-        setIsDirty(checkDirty(newData));
-        setShowRoomDropdown(false);
-        setRoomSearch("");
-    };
-
+const handleRoomSelect = (selectedRoom, e) => {
+  e.stopPropagation();
+  console.log(selectedRoom);
+  const newData = {
+    ...studentData,
+    room: {
+      _id: selectedRoom.id,
+      number: selectedRoom.number,
+      chairs: selectedRoom.chairs,
+      pillows: selectedRoom.pillows,
+      tables: selectedRoom.tables,
+      beds: selectedRoom.beds
+    },
+    supplies: {
+      chairs: selectedRoom.chairs || 0,
+      pillows: selectedRoom.pillows || 0,
+      tables: selectedRoom.tables || 0,
+      beds: selectedRoom.beds || 0
+    }
+  };
+  console.log(newData);
+  setStudentData(newData);
+  setIsDirty(true);
+  setShowRoomDropdown(false);
+  setRoomSearch("");
+};
     const handleBlockSelect = (block, e) => {
         e.stopPropagation(); 
         const newData = {
@@ -164,11 +180,23 @@ export default function Student({ firstName, lastName, email, phone, room, block
         setBlockSearch("");
     };
 
-    const handleSave = () => {
-        console.log("Updated student data:", studentData);
-        setEditMode(false);
-        setIsDirty(false);
-    };
+const handleSave = async () => {
+  try {
+    const updatedStudent = await updateStudent(studentData._id, studentData);
+    console.log("Data after fetch is ", studentData);
+    // Update local state with the returned data
+    setStudentData(prev => ({
+      ...updatedStudent,
+      supplies: prev.supplies // Maintain local supplies
+    }));
+    
+    setEditMode(false);
+    setIsDirty(false);
+  } catch (error) {
+    console.error("Failed to update student:", error.message);
+    // Show error to user
+  }
+};
 
     const handleCancel = () => {
         setStudentData(initialData);
@@ -476,29 +504,37 @@ return (
       <div className="flex flex-col bg-white brightness-95 rounded-md py-4 px-6 text-lg flex-1">
         <h2 className="flex justify-center pb-4 text-lg font-medium">Reports</h2>
         <div className="border pt-2 px-2 rounded-2xl border-gray-300">
-        <div className="py-2">
+          {/* Grid Header */}
+          <div className="grid grid-cols-12 gap-2 px-4 py-2 font-medium">
+            <div className="col-span-1">#</div>
+            <div className="col-span-4">Date</div>
+            <div className="col-span-3">Issue</div>
+            <div className="col-span-2">Urgency</div>
+            <div className="col-span-2">Status</div>
+          </div>
+          
+          {/* Grid Rows */}
+          <div className="py-2">
             {studentData?.reports?.details?.length > 0 ? (
-                studentData.reports.details.map((report, index) => (
+              studentData.reports.details.map((report, index) => (
                 <div
-                    key={index}
-                    onClick={() => pushToReport(report._id)}
-                    className="flex items-center px-2 hover:bg-gray-100 cursor-pointer"
+                  key={index}
+                  onClick={() => pushToReport(report._id)}
+                  className="grid grid-cols-12 gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer items-center"
                 >
-                    <p className="py-2 pl-4 font-semibold w-6">{index + 1}.</p>
-                    <div className="flex justify-between flex-1">
-                    <p className="py-2 pl-4">{new Date(report.createdAt).toLocaleString("en-US")}</p>
-                    <p className="py-2 pl-4">{report.issues[0]}</p>
-                    <p className={`py-2 pl-4 ${urgencyColor[report.urgency]}`}>{report.urgency}</p>
-                    <p className="py-2 pl-4">{report.status}</p>
-                    </div>
+                  <div className="col-span-1 font-semibold">{index + 1}.</div>
+                  <div className="col-span-4">{new Date(report.createdAt).toLocaleString("en-US")}</div>
+                  <div className="col-span-3 truncate">{report.issues[0]}</div>
+                  <div className={`col-span-2 ${urgencyColor[report.urgency]}`}>{report.urgency}</div>
+                  <div className="col-span-2">{report.status}</div>
                 </div>
-                ))
+              ))
             ) : (
-                <p className="py-2 text-center text-gray-500">No reports found</p>
+              <div className="grid grid-cols-12 py-4 text-center text-gray-500">
+                <div className="col-span-12">No reports found</div>
+              </div>
             )}
-        </div>
-
-
+          </div>
         </div>
       </div>
     </div>
@@ -508,7 +544,7 @@ return (
       {editMode ? (
         <div className="flex gap-4">
           <button 
-            onClick={handleSave}
+            onClick={()=>handleSave(studentData._id)}
             className={`text-[var(--w-color)] px-6 py-2 rounded-md transition bg-[var(--green-color)] ${isDirty ? "cursor-pointer shadow hover:brightness-110" : "cursor-not-allowed brightness-80"}`}
             disabled={!isDirty}
           >
